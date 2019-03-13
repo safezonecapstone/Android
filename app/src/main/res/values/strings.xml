@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MapsPractice</string>
-    <string name="google_maps_api_key">AIzaSyBhnEqIRW-gy54osQVDaYNKmk9hnbp5_sw</string>
+    <string name="google_maps_api_key">API_KEY_HERE</string>
     <string name="btnMap">Map</string>
 </resources>
