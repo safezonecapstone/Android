@@ -3,6 +3,7 @@ package com.example.mapspractice;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -42,28 +43,6 @@ import androidx.core.content.ContextCompat;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady: called");
-        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMapReady: map is ready");
-        mMap = googleMap;
-
-        if (mLocationPermissionGranted) {
-            getDeviceLocation();
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-            init();
-        }
-    }
-
     private static final String TAG = "MapActivity";
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -78,6 +57,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private String address;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady: called");
+        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onMapReady: map is ready");
+        mMap = googleMap;
+
+        if (mLocationPermissionGranted) {
+            //getDeviceLocation();
+            //geoLocate();
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+
+            if (address.isEmpty()) {
+                Log.d(TAG, "address_null: " + address);
+                getDeviceLocation();
+            }
+            else {
+                Log.d(TAG, "address_not_null: " + address);
+                geoLocate();
+            }
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+            init();
+        }
+    }
 
     @Override
     protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
@@ -88,6 +99,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGPS = (ImageView) findViewById(R.id.ic_gps);
 
         getLocationPermission();
+        getAddress();
+    }
+
+    private void getAddress() {
+        Intent intent = getIntent();
+        if (intent.hasExtra("Address")) {
+            address = intent.getStringExtra("Address");
+        }
     }
 
     private void init() {
@@ -121,7 +140,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void geoLocate() {
         Log.d(TAG, "geoLocate: geoLocating");
 
-        String searchString = mSearchText.getText().toString();
+        String searchString = address;//mSearchText.getText().toString();
 
         Geocoder geocoder = new Geocoder(MapActivity.this);
         List<Address> list = new ArrayList<>();
@@ -151,10 +170,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()) {
+                        if(task.isSuccessful() && task.getResult() != null) {
                             Log.d(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
-
+                            Log.d(TAG, "onComplete:location: " + currentLocation.getLatitude() + currentLocation.getLongitude());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         }
                         else {
