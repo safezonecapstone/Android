@@ -1,4 +1,4 @@
-package com.example.mapspractice;
+package com.safezone.app;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;

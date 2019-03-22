@@ -1,4 +1,4 @@
-package com.example.mapspractice;
+package com.safezone.app;
 
 import org.junit.Test;
 
