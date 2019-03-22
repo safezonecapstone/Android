@@ -36,9 +36,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -59,11 +56,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private String mAddress;
-    private PlacesClient mPlacesClient;
-    private List<Place.Field> mPlaceFields;
-    private double mCurrentLatitude;
-    private double mCurrentLongitude;
+    private double mCurrentLatitude = 0.0d;
+    private double mCurrentLongitude = 0.0d;
     List<String> subwayData;
+    private Location currLocation;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -81,14 +77,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (mAddress.isEmpty()) {
                 Log.d(TAG, "address_null: " + mAddress);
                 getDeviceLocation();
+                Log.d(TAG, "onMapReady empty: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
             }
             else {
                 Log.d(TAG, "address_not_null: " + mAddress);
                 geoLocate();
             }
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+            Log.d(TAG, "onMapReady: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
             init();
         }
     }
@@ -114,7 +112,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void init() {
         Log.d(TAG, "init: initializing");
 
-        setDeviceLocation();
+        //setDeviceLocation();
         getSubways(mCurrentLatitude, mCurrentLongitude);
 
         mGPS.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +126,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void getSubways(double latitude, double longitude)
     {
-        Log.d(TAG, "init: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
+        Log.d(TAG, "getSubways: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
         Log.d(TAG, "getSubways: entered");
         String api_key = getString(R.string.safezone_api_key);
         StringBuilder subways =
@@ -204,8 +202,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if(task.isSuccessful() && task.getResult() != null) {
                             Log.d(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
-                            mCurrentLatitude = currentLocation.getLatitude();
-                            mCurrentLongitude = currentLocation.getLongitude();
+                            currLocation = (Location) task.getResult();
+                            //mCurrentLatitude = currentLocation.getLatitude();
+                            //mCurrentLongitude = currentLocation.getLongitude();
                             Log.d(TAG, "onComplete:location: " + currentLocation.getLatitude() + currentLocation.getLongitude());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         }
@@ -220,6 +219,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
+
+/*        mCurrentLatitude = currLocation.getLatitude();
+        mCurrentLongitude = currLocation.getLongitude();*/
+        Log.d(TAG, "getDeviceLocation outside:latitude: " + mCurrentLatitude);
+        Log.d(TAG, "getDeviceLocation outside:longitude: " + mCurrentLongitude);
     }
 
     private void setDeviceLocation() {
@@ -293,7 +297,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if(grantResults.length > 0) {
                     for(int i = 0; i < grantResults.length; i++) {
                         if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            //mLocationPermissionGranted = false;
                             Log.d(TAG, "onRequestPermissionsResult: permission failed");
                             return;
                         }

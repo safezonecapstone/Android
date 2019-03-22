@@ -39,7 +39,7 @@
             android:textColor="#000"
             android:id="@+id/input_search_main"
             android:background="@null"
-            android:hint="Enter Location or Leave Empty for Current Location"
+            android:hint="Leave Blank for Current Location"
             android:imeOptions="actionSearch"
             android:singleLine="true"/>
 
