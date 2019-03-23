@@ -46,7 +46,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final float DEFAULT_ZOOM = 15f;
-    public static final int PROXIMITY_RADIUS = 700;
 
     //widgets
     private ImageView mGPS;
@@ -56,10 +55,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private String mAddress;
-    private double mCurrentLatitude = 0.0d;
-    private double mCurrentLongitude = 0.0d;
-    List<String> subwayData;
-    private Location currLocation;
+    private double mCurrentLatitude;
+    private double mCurrentLongitude;
+    private List<String> subwayData;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -86,7 +84,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            Log.d(TAG, "onMapReady: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
             init();
         }
     }
@@ -98,6 +95,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mGPS = (ImageView) findViewById(R.id.ic_gps);
 
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         getLocationPermission();
         getAddress();
     }
@@ -106,6 +105,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         if (intent.hasExtra("Address")) {
             mAddress = intent.getStringExtra("Address");
+            mCurrentLatitude = intent.getDoubleExtra("Latitude", 0.0);
+            mCurrentLongitude = intent.getDoubleExtra("Longitude", 0.0);
         }
     }
 
@@ -191,7 +192,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        final double lat;
+        final double lon;
 
         try {
             if(mLocationPermissionGranted) {
@@ -202,9 +204,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if(task.isSuccessful() && task.getResult() != null) {
                             Log.d(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
-                            currLocation = (Location) task.getResult();
-                            //mCurrentLatitude = currentLocation.getLatitude();
-                            //mCurrentLongitude = currentLocation.getLongitude();
                             Log.d(TAG, "onComplete:location: " + currentLocation.getLatitude() + currentLocation.getLongitude());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         }
@@ -219,11 +218,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
-
-/*        mCurrentLatitude = currLocation.getLatitude();
-        mCurrentLongitude = currLocation.getLongitude();*/
-        Log.d(TAG, "getDeviceLocation outside:latitude: " + mCurrentLatitude);
-        Log.d(TAG, "getDeviceLocation outside:longitude: " + mCurrentLongitude);
     }
 
     private void setDeviceLocation() {
