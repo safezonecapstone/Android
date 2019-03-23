@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">SafeZone</string>
     <string name="google_maps_api_key">API_KEY</string>
-    <string name="safezone_api_key">API_KEY</string>
+    <string name="safezone_api_key">4c4fdb68-49d7-11e9-8928-88e9fe70a0a1</string>
+
+    <string name="date_prompt">Choose Date</string>
+
+    <string-array name="country_arrays">
+        <item>Last Week</item>
+        <item>Last Month</item>
+        <item>Last 3 Months</item>
+        <item>Last 6 Months</item>
+        <item>Last 9 Months</item>
+        <item>Last 12 Months</item>
+    </string-array>
 </resources>

@@ -9,7 +9,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -38,6 +40,7 @@ import androidx.core.content.ContextCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -57,7 +60,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String mAddress;
     private double mCurrentLatitude;
     private double mCurrentLongitude;
-    private List<String> subwayData;
+    private ArrayList<TrainInformation> subwayData=new ArrayList<TrainInformation>();
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -145,7 +148,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                         Log.i(TAG, "onResponse: Result= " + result.toString());
                         try {
-                            subwayData = JSONHandler.toList(result);
+                            subwayData.clear();
+                            for (int i = 0; i< result.length();i++) {
+                                JSONObject jsonObject = (JSONObject) result.get(i); //
+                                String name=jsonObject.getString("name");
+                                Log.d(TAG, "Station Name" + name);
+
+                                String line=jsonObject.getString("lines");
+                                Log.d(TAG, "Lines" + line);
+
+                                double longitude1=jsonObject.getDouble("longitude");
+                                double latitude1=jsonObject.getDouble("latitude");
+
+                                TrainInformation trainInformation2=new TrainInformation(name, "High",  "95%", longitude1, latitude1);
+                                String [] eachline=line.split("-");
+                                for(int j=0; j<eachline.length; j++)
+                                {
+                                    Log.d(TAG, "Lines" + eachline[j]);
+                                    trainInformation2.addTrainStop(eachline[j]);
+                                }
+                                subwayData.add(trainInformation2);
+                            }
+                            populateListView();
                             Log.d(TAG, "jsonData: happened" + subwayData);
                         }
                         catch (JSONException e) {
@@ -162,6 +186,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
         AppController.getInstance().addToRequestQueue(jsonArrayRequest);
+    }
+
+    private void populateListView() {
+
+        TrainInformationAdapter adapter=new TrainInformationAdapter(this, subwayData);
+
+        ListView listView = (ListView) findViewById(R.id.list_item);
+
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                Intent myintent = new Intent(MapActivity.this, StatsActivity.class);
+
+                double [] long_lat = new double[2];
+                long_lat[0]=subwayData.get(position).getLongitude();
+                long_lat[1]=subwayData.get(position).getLatitude();
+                myintent.putExtra("Coordinates", long_lat);
+                myintent.putExtra("Station Name", subwayData.get(position).getName());
+
+                startActivity(myintent);
+            }
+        });
     }
 
     private void geoLocate() {
