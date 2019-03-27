@@ -104,6 +104,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getAddress();
     }
 
+    //Get info being passed from one activity to another (intent)
     private void getAddress() {
         Intent intent = getIntent();
         if (intent.hasExtra("Address")) {
@@ -128,6 +129,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+
+    //Api Request (get nearby stations based of address, returns subway stations
     private void getSubways(double latitude, double longitude)
     {
         Log.d(TAG, "getSubways: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
@@ -152,19 +155,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             for (int i = 0; i< result.length();i++) {
                                 JSONObject jsonObject = (JSONObject) result.get(i); //
                                 String name=jsonObject.getString("name");
-                                Log.d(TAG, "Station Name" + name);
+                                Log.d(TAG, "Station Name " + name);
 
                                 String line=jsonObject.getString("lines");
-                                Log.d(TAG, "Lines" + line);
+                                Log.d(TAG, "Lines " + line);
+
+                                String ID=jsonObject.getString("id");
+                                Log.d(TAG, "Train ID " + ID);
 
                                 double longitude1=jsonObject.getDouble("longitude");
                                 double latitude1=jsonObject.getDouble("latitude");
 
-                                TrainInformation trainInformation2=new TrainInformation(name, "High",  "95%", longitude1, latitude1);
-                                String [] eachline=line.split("-");
+                                TrainInformation trainInformation2=new TrainInformation(name, "High",  "95%", latitude1, longitude1);
+                                String [] eachline=line.split("\"");
                                 for(int j=0; j<eachline.length; j++)
                                 {
-                                    Log.d(TAG, "Lines" + eachline[j]);
                                     trainInformation2.addTrainStop(eachline[j]);
                                 }
                                 subwayData.add(trainInformation2);
@@ -201,10 +206,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent myintent = new Intent(MapActivity.this, StatsActivity.class);
 
-                double [] long_lat = new double[2];
-                long_lat[0]=subwayData.get(position).getLongitude();
-                long_lat[1]=subwayData.get(position).getLatitude();
-                myintent.putExtra("Coordinates", long_lat);
+                double longitude;
+                double latitude;
+                longitude=subwayData.get(position).getLongitude();
+                latitude=subwayData.get(position).getLatitude();
+                myintent.putExtra("Latitude", latitude);
+                myintent.putExtra("Longitude", longitude);
                 myintent.putExtra("Station Name", subwayData.get(position).getName());
 
                 startActivity(myintent);

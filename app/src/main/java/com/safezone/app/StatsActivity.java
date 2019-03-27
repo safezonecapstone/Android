@@ -1,63 +1,198 @@
 package com.safezone.app;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
-public class StatsActivity extends Activity {
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class StatsActivity extends AppCompatActivity {
+
+    private static final String TAG = "StatsActivity";
+
     private Spinner spinner2;
-    private TextView address;
+    private String address;
+    double mCurrentLatitude;
+    double mCurrentLongitude;
+    private ArrayList<CrimeStationInformation> cat = new ArrayList<CrimeStationInformation>();
 
-    ListView listView;
-    double longitude;
-    double latitude;
-    double [] long_lat=new double[2];
-    String station_name;
-    // there are 12 crime categories, when importing dataset array to size of 12
-    String crimeCategories[] = {"Murder", "Rape", "Robbery", "Felony Assault", "Burgalary",
-            "Grand Larceny", "Petit Larceny", "Kidnapping", "Offenses Against", "Public Order",
-            "Shootings", "Misdemeanor Sex Crimes", "Misdemeanor Assault"};
-
-
+    /** Called when the activity is first created. */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
-        listView = (ListView) findViewById(R.id.listView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, crimeCategories);
-        listView.setAdapter(adapter);
-        // Register the ListView  for Context menu
-        registerForContextMenu(listView);
 
-        address=(TextView) findViewById(R.id.address);
-        Intent intent=getIntent();
-        if(intent.hasExtra("Coordinates"))
-        {
-            long_lat=intent.getDoubleArrayExtra("Coordinates");
-        }
-        if(intent.hasExtra("Station Name"))
-        {
-            station_name=intent.getStringExtra("Station Name");
-        }
-        //Bundle extras = getIntent().getExtras();
-        address.setText(station_name);
-
-        // create the drop down menu for dates
-        //addItemsOnSpinner2();
+        getAddress();
+        getCrimes();
+        // fills the table
     }
 
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-////        MenuInflater inflater = getMenuInflater();
-////        inflater.inflate(R.menu.menu_main, menu);
-////        menu.setHeaderTitle("Select The Action");
-//    }
+    private void getAddress() {
+        Intent intent = getIntent();
+        if (intent.hasExtra("Station Name")) {
+            address = intent.getStringExtra("Station Name");
+            mCurrentLatitude = intent.getDoubleExtra("Latitude", 0.0);
+            Log.d(TAG, "Latitude " + mCurrentLatitude);
+            mCurrentLongitude = intent.getDoubleExtra("Longitude", 0.0);
+            Log.d(TAG, "Longitude " + mCurrentLongitude);
+        }
+    }
+
+    private void getCrimes()
+    {
+        Log.d(TAG, "getCrimes: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
+        Log.d(TAG, "getCrimes: entered");
+        String api_key = getString(R.string.safezone_api_key);
+        StringBuilder crimes =
+                new StringBuilder("https://api-dot-united-triode-233023.appspot.com/api/crimes/nearby?");
+        crimes.append("latitude=").append(mCurrentLatitude);
+        crimes.append("&longitude=").append(mCurrentLongitude);
+        crimes.append("&API_KEY=" + api_key);
+
+        String crimesURL = crimes.toString();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, crimesURL, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject result) {
+                        Log.i(TAG, "onResponse: Result= " + result.toString());
+                        try {
+                            cat.clear();
+                            JSONObject newjsonObject = (JSONObject) result.getJSONObject("frequencies");
+                            //Retrieve each frequency with built in json methods
+
+                            int frequency=newjsonObject.getInt("Murder");
+                            Log.d(TAG, "Murder " + frequency);
+                            int frequency2=newjsonObject.getInt("Burglary");
+                            Log.d(TAG, "Burglary " + frequency2);
+                            int frequency3=newjsonObject.getInt("Felony Assault");
+                            Log.d(TAG, "Felony Assault " + frequency3);
+                            int frequency4=newjsonObject.getInt("Grand Larceny");
+                            Log.d(TAG, "Grand Larceny " + frequency4);
+                            int frequency5=newjsonObject.getInt("Kidnapping");
+                            Log.d(TAG, "Kidnapping" + frequency5);
+                            int frequency6=newjsonObject.getInt("Misdemeanor Assault");
+                            Log.d(TAG, "Misdemeanor Assault " + frequency6);
+                            int frequency7=newjsonObject.getInt("Misdemeanor Sex Crimes");
+                            Log.d(TAG, "Misdemeanor Sex Crimes " + frequency7);
+                            int frequency8=newjsonObject.getInt("Offenses against Public Order");
+                            Log.d(TAG, "Offenses against Public Order " + frequency8);
+                            int frequency9=newjsonObject.getInt("Petit Larceny");
+                            Log.d(TAG, "Petit Larceny " + frequency9);
+                            int frequency10=newjsonObject.getInt("Rape");
+                            Log.d(TAG, "Rape " + frequency10);
+                            int frequency11=newjsonObject.getInt("Robbery");
+                            Log.d(TAG, "Robbery" + frequency11);
+                            int frequency12=newjsonObject.getInt("Shootings");
+                            Log.d(TAG, "Shootings" + frequency12);
+                            CrimeStationInformation crimeStationInformation= new CrimeStationInformation("Murder",frequency );
+                            CrimeStationInformation crimeStationInformation2= new CrimeStationInformation("Burglary",frequency2 );
+                            CrimeStationInformation crimeStationInformation3= new CrimeStationInformation("Felony Assault",frequency3);
+                            CrimeStationInformation crimeStationInformation4= new CrimeStationInformation("Kidnapping",frequency4);
+                            CrimeStationInformation crimeStationInformation5= new CrimeStationInformation("Misdemeanor Assault",frequency5);
+                            CrimeStationInformation crimeStationInformation6= new CrimeStationInformation("Misdemeanor Sex Crimes",frequency6);
+                            CrimeStationInformation crimeStationInformation7= new CrimeStationInformation("Offenses against Public Order",frequency7);
+                            CrimeStationInformation crimeStationInformation8= new CrimeStationInformation("Petit Larceny",frequency8);
+                            CrimeStationInformation crimeStationInformation9= new CrimeStationInformation("Felony Assault",frequency9);
+                            CrimeStationInformation crimeStationInformation10= new CrimeStationInformation("Rape",frequency10);
+                            CrimeStationInformation crimeStationInformation11= new CrimeStationInformation("Robbery",frequency11);
+                            CrimeStationInformation crimeStationInformation12= new CrimeStationInformation("Shootings",frequency12);
+
+                            cat.add(crimeStationInformation);
+                            cat.add(crimeStationInformation2);
+                            cat.add(crimeStationInformation3);
+                            cat.add(crimeStationInformation4);
+                            cat.add(crimeStationInformation5);
+                            cat.add(crimeStationInformation6);
+                            cat.add(crimeStationInformation7);
+                            cat.add(crimeStationInformation8);
+                            cat.add(crimeStationInformation9);
+                            cat.add(crimeStationInformation10);
+                            cat.add(crimeStationInformation11);
+                            cat.add(crimeStationInformation12);
+
+                            JSONArray jsonArray= (JSONArray) result.getJSONArray("results");
+                            for (int i = 0; i< jsonArray.length();i++) {
+                                JSONObject jsonresultsObject = (JSONObject) jsonArray.get(i);
+                                String category=jsonresultsObject.getString("category");
+                                String cdescription=jsonresultsObject.getString("pd_desc");
+                                String dates=jsonresultsObject.getString("date");
+                                CrimeDescription description=new CrimeDescription(cdescription, dates);
+                                for(int j=0; j<cat.size(); j++)
+                                {
+                                    if(cat.get(j).getCrime_category().equals(category))
+                                    {
+                                        cat.get(j).addCrimeDescription(description);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            fillTable(cat);
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "getSubways: Error = " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: Error= " + error);
+                        Log.e(TAG, "onErrorResponse: Error= " + error.getMessage());
+                    }
+                });
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+    }
+
+    // this fills all the rows,
+    public void fillTable (ArrayList<CrimeStationInformation> cat) {
+        // it'll be 12 bc its 12 objects
+        int rowCount = cat.size();
+        Log.d("Fill Table", "rowCount = "+rowCount);
+        // this is in the xml tablelayout name
+        TableLayout table = (TableLayout) this.findViewById(R.id.tablelayout);
+        for(int i=0;i<cat.size();i++) {
+            fillRow2(table, i);
+        }
+    }
+    public void fillRow2(TableLayout table, int position){
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View fullRow = inflater.inflate(R.layout.rows, null);
+        // name from xml must match
+        TextView Name = (TextView) fullRow.findViewById(R.id.Name);
+        // var to hold the text in
+
+            Name.setText(cat.get(position).getCrime_category());
+            TextView Frequency = (TextView) fullRow.findViewById(R.id.Frequency);
+            // first column
+            //[noRow]
+            Frequency.setText(Integer.toString(cat.get(position).getFrequency()));
+            //TextView Date = (TextView) fullRow.findViewById(R.id.Date);
+            // second column
+            //Date.setText(cat.getDate());
+            table.addView(fullRow);
+
+    }
 }

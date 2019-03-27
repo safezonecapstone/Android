@@ -25,8 +25,10 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         // Lookup view for data population
         TextView place = convertView.findViewById(R.id.locationName);
 
+
+        String location_name=getContext().getString(R.string.location_name, location.getName());
         // Populate the data into the template view using the data object
-        place.setText(location.getName());
+        place.setText(location_name);
 
         TextView trains = convertView.findViewById(R.id.trains);
 
@@ -35,8 +37,9 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         {
             builder.append(location.getTrainStop().get(i)+ " ");
         }
+        String listOfTrains=getContext().getString(R.string.trains, builder.toString());
 
-        trains.setText(builder.toString());
+        trains.setText(listOfTrains);
 
         // Return the completed view to render on screen
         return convertView;
