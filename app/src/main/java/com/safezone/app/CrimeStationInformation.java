@@ -38,4 +38,8 @@ public class CrimeStationInformation {
     {
         c_description.add(a_crime);
     }
+
+    public ArrayList<CrimeDescription> getC_description() {
+        return c_description;
+    }
 }

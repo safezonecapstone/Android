@@ -6,9 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -147,7 +153,8 @@ public class StatsActivity extends AppCompatActivity {
                                 }
                             }
 
-                            fillTable(cat);
+                            populateCrimeListView();
+                            //fillTable(cat);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -165,34 +172,50 @@ public class StatsActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
+    private void populateCrimeListView() {
+
+        CrimeStationInformationAdapter adapter=new CrimeStationInformationAdapter(this, cat);
+
+        ListView listView = (ListView) findViewById(R.id.crime_item);
+
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                Toast.makeText(StatsActivity.this, Integer.toString(position), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     // this fills all the rows,
-    public void fillTable (ArrayList<CrimeStationInformation> cat) {
-        // it'll be 12 bc its 12 objects
-        int rowCount = cat.size();
-        Log.d("Fill Table", "rowCount = "+rowCount);
-        // this is in the xml tablelayout name
-        TableLayout table = (TableLayout) this.findViewById(R.id.tablelayout);
-        for(int i=0;i<cat.size();i++) {
-            fillRow2(table, i);
-        }
-    }
-    public void fillRow2(TableLayout table, int position){
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View fullRow = inflater.inflate(R.layout.rows, null);
-        // name from xml must match
-        TextView Name = (TextView) fullRow.findViewById(R.id.Name);
-        // var to hold the text in
-
-            Name.setText(cat.get(position).getCrime_category());
-            TextView Frequency = (TextView) fullRow.findViewById(R.id.Frequency);
-            // first column
-            //[noRow]
-            Frequency.setText(Integer.toString(cat.get(position).getFrequency()));
-            //TextView Date = (TextView) fullRow.findViewById(R.id.Date);
-            // second column
-            //Date.setText(cat.getDate());
-            table.addView(fullRow);
-
-    }
+//    public void fillTable (ArrayList<CrimeStationInformation> cat) {
+//        // it'll be 12 bc its 12 objects
+//        int rowCount = cat.size();
+//        Log.d("Fill Table", "rowCount = "+rowCount);
+//        // this is in the xml tablelayout name
+//        TableLayout table = (TableLayout) this.findViewById(R.id.tablelayout);
+//        for(int i=0;i<cat.size();i++) {
+//            fillRow2(table, i);
+//        }
+//    }
+//    public void fillRow2(TableLayout table, int position){
+//        LayoutInflater inflater = (LayoutInflater)
+//                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View fullRow = inflater.inflate(R.layout.rows, null);
+//        // name from xml must match
+//        TextView Name = (TextView) fullRow.findViewById(R.id.Name);
+//        // var to hold the text in
+//
+//        Name.setText(cat.get(position).getCrime_category());
+//        TextView Frequency = (TextView) fullRow.findViewById(R.id.Frequency);
+//        // first column
+//        //[noRow]
+//        Frequency.setText(Integer.toString(cat.get(position).getFrequency()));
+//
+//        //TextView Date = (TextView) fullRow.findViewById(R.id.Date);
+//        // second column
+//        //Date.setText(cat.getDate());
+//        table.addView(fullRow);
+//    }
 }

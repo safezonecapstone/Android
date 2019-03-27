@@ -10,7 +10,6 @@ public class CrimeDescription {
         date_ = Date;
     }
 
-
     public String getDate_() {
         return date_;
     }
