@@ -26,7 +26,6 @@ public class CrimeStationInformationAdapter  extends ArrayAdapter<CrimeStationIn
         // Lookup view for data population
         TextView category = convertView.findViewById(R.id.Name);
 
-
         String name=crime.getCrime_category();
         // Populate the data into the template view using the data object
         category.setText(name);

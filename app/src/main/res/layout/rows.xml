@@ -11,11 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="1px"
         android:background="#FFF"
-        android:paddingLeft="10px"
-        android:paddingTop="10px"
-        android:paddingRight="40px"
-        android:paddingBottom="3px"
-        android:text="Categroy"
+        android:text="Category"
         android:textColor="#000"
         android:textSize="25dp" />
 

@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -182,6 +183,10 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void populateCrimeListView() {
+
+        TextView textView=(TextView) findViewById(R.id.Address);
+
+        textView.setText(address);
 
         CrimeStationInformationAdapter adapter=new CrimeStationInformationAdapter(this, cat);
 

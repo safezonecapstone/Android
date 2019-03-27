@@ -8,15 +8,20 @@
     tools:context="com.safezone.app.StatsActivity">
 
     <TextView
-        android:id="@+id/Name"
-        android:layout_width="140dp"
+        android:id="@+id/Address"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="1px"
         android:background="#FFF"
-        android:paddingLeft="10px"
-        android:paddingTop="10px"
-        android:paddingRight="40px"
-        android:paddingBottom="3px"
+        android:textColor="#000"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="51dp"
+        android:background="#FFF"
         android:text="Categroy"
         android:textColor="#000"
         android:textSize="30dp" />
@@ -24,14 +29,10 @@
     <TextView
         android:id="@+id/Frequency"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1px"
+        android:layout_height="50dp"
+        android:layout_marginTop="51dp"
         android:background="#FFF"
-        android:layout_marginLeft="140dp"
-        android:paddingLeft="10px"
-        android:paddingTop="10px"
-        android:paddingRight="20px"
-        android:paddingBottom="3px"
+        android:layout_marginLeft="251dp"
         android:text="Frequency"
         android:textColor="#000"
         android:textSize="30dp" />
@@ -47,7 +48,7 @@
         android:id="@+id/crime_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="51dp"
+        android:layout_marginTop="102dp"
         tools:context=".StatsActivity">
     </ListView>
 

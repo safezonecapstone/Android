@@ -18,4 +18,14 @@
         android:layout_marginTop="53dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <Button
+        android:id="@+id/viewCrimes"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="105dp"
+        android:background="#FFFF"
+        android:textColor="#0000FF"
+        android:text="View Crimes"
+        android:textSize="15dp" />
+
 </RelativeLayout>
