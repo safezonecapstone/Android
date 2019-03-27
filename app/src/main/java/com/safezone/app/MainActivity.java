@@ -13,7 +13,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -51,8 +50,10 @@ public class MainActivity extends Activity {
     private EditText mAddress;
 
     //vars
-    private double lat;
-    private double lng;
+    private double mLat;
+    private double mLng;
+    LocationManager mLocationManager;
+    LocationListener mLocationListener;
 
 
     @Override
@@ -62,22 +63,22 @@ public class MainActivity extends Activity {
 
         mAddress = (EditText) findViewById(R.id.input_search_main);
 
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showLocationBar();
         }
 
         // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
+        mLocationListener = new LocationListener() {
 
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
 
                 if (location != null) {
-                    lat = location.getLatitude();
-                    lng = location.getLongitude();
-                    Log.d(TAG, "onLocationChanged: lat lng" + lat + " " + lng);
+                    mLat = location.getLatitude();
+                    mLng = location.getLongitude();
+                    Log.d(TAG, "onLocationChanged: mLat mLng" + mLat + " " + mLng);
 
                 }
             }
@@ -92,7 +93,7 @@ public class MainActivity extends Activity {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
 
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, mLocationListener);
         }
         else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
@@ -184,8 +185,8 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         String address = mAddress.getText().toString();
         intent.putExtra("Address", address);
-        intent.putExtra("Latitude", lat);
-        intent.putExtra("Longitude", lng);
+        intent.putExtra("Latitude", mLat);
+        intent.putExtra("Longitude", mLng);
         startActivity(intent);
     }
 
