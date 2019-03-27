@@ -36,6 +36,7 @@
         </activity>
         <activity android:name="com.safezone.app.MapActivity"></activity>
         <activity android:name="com.safezone.app.StatsActivity"></activity>
+        <activity android:name="com.safezone.app.CrimeDescriptionActivity"></activity>
     </application>
 
 </manifest>

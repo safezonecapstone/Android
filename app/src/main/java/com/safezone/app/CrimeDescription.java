@@ -1,6 +1,8 @@
 package com.safezone.app;
 
-public class CrimeDescription {
+import java.io.Serializable;
+
+public class CrimeDescription implements Serializable {
     String description_;
     String date_;
 

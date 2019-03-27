@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,6 +40,9 @@ public class StatsActivity extends AppCompatActivity {
     double mCurrentLatitude;
     double mCurrentLongitude;
     private ArrayList<CrimeStationInformation> cat = new ArrayList<CrimeStationInformation>();
+    String [] category = new String[]{"Murder", "Burglary", "Felony Assault", "Grand Larceny", "Kidnapping",
+            "Misdemeanor Assault", "Offenses against Public Order", "Misdemeanor Sex Crimes",
+            "Petit Larceny",  "Rape", "Robbery", "Shootings"};
 
     /** Called when the activity is first created. */
     @Override
@@ -86,55 +90,60 @@ public class StatsActivity extends AppCompatActivity {
                             JSONObject newjsonObject = (JSONObject) result.getJSONObject("frequencies");
                             //Retrieve each frequency with built in json methods
 
-                            int frequency=newjsonObject.getInt("Murder");
-                            Log.d(TAG, "Murder " + frequency);
-                            int frequency2=newjsonObject.getInt("Burglary");
-                            Log.d(TAG, "Burglary " + frequency2);
-                            int frequency3=newjsonObject.getInt("Felony Assault");
-                            Log.d(TAG, "Felony Assault " + frequency3);
-                            int frequency4=newjsonObject.getInt("Grand Larceny");
-                            Log.d(TAG, "Grand Larceny " + frequency4);
-                            int frequency5=newjsonObject.getInt("Kidnapping");
-                            Log.d(TAG, "Kidnapping" + frequency5);
-                            int frequency6=newjsonObject.getInt("Misdemeanor Assault");
-                            Log.d(TAG, "Misdemeanor Assault " + frequency6);
-                            int frequency7=newjsonObject.getInt("Misdemeanor Sex Crimes");
-                            Log.d(TAG, "Misdemeanor Sex Crimes " + frequency7);
-                            int frequency8=newjsonObject.getInt("Offenses against Public Order");
-                            Log.d(TAG, "Offenses against Public Order " + frequency8);
-                            int frequency9=newjsonObject.getInt("Petit Larceny");
-                            Log.d(TAG, "Petit Larceny " + frequency9);
-                            int frequency10=newjsonObject.getInt("Rape");
-                            Log.d(TAG, "Rape " + frequency10);
-                            int frequency11=newjsonObject.getInt("Robbery");
-                            Log.d(TAG, "Robbery" + frequency11);
-                            int frequency12=newjsonObject.getInt("Shootings");
-                            Log.d(TAG, "Shootings" + frequency12);
-                            CrimeStationInformation crimeStationInformation= new CrimeStationInformation("Murder",frequency );
-                            CrimeStationInformation crimeStationInformation2= new CrimeStationInformation("Burglary",frequency2 );
-                            CrimeStationInformation crimeStationInformation3= new CrimeStationInformation("Felony Assault",frequency3);
-                            CrimeStationInformation crimeStationInformation4= new CrimeStationInformation("Kidnapping",frequency4);
-                            CrimeStationInformation crimeStationInformation5= new CrimeStationInformation("Misdemeanor Assault",frequency5);
-                            CrimeStationInformation crimeStationInformation6= new CrimeStationInformation("Misdemeanor Sex Crimes",frequency6);
-                            CrimeStationInformation crimeStationInformation7= new CrimeStationInformation("Offenses against Public Order",frequency7);
-                            CrimeStationInformation crimeStationInformation8= new CrimeStationInformation("Petit Larceny",frequency8);
-                            CrimeStationInformation crimeStationInformation9= new CrimeStationInformation("Felony Assault",frequency9);
-                            CrimeStationInformation crimeStationInformation10= new CrimeStationInformation("Rape",frequency10);
-                            CrimeStationInformation crimeStationInformation11= new CrimeStationInformation("Robbery",frequency11);
-                            CrimeStationInformation crimeStationInformation12= new CrimeStationInformation("Shootings",frequency12);
+                            for(int i=0; i<category.length; i++)
+                            {
+                                int frequency=newjsonObject.getInt(category[i]);
+                                Log.d(TAG, category[i] + frequency);
+                                CrimeStationInformation crimeStationInformation= new CrimeStationInformation(category[i],frequency );
+                                cat.add(crimeStationInformation);
+                            }
 
-                            cat.add(crimeStationInformation);
-                            cat.add(crimeStationInformation2);
-                            cat.add(crimeStationInformation3);
-                            cat.add(crimeStationInformation4);
-                            cat.add(crimeStationInformation5);
-                            cat.add(crimeStationInformation6);
-                            cat.add(crimeStationInformation7);
-                            cat.add(crimeStationInformation8);
-                            cat.add(crimeStationInformation9);
-                            cat.add(crimeStationInformation10);
-                            cat.add(crimeStationInformation11);
-                            cat.add(crimeStationInformation12);
+//                            int frequency2=newjsonObject.getInt("Burglary");
+//                            Log.d(TAG, "Burglary " + frequency2);
+//                            int frequency3=newjsonObject.getInt("Felony Assault");
+//                            Log.d(TAG, "Felony Assault " + frequency3);
+//                            int frequency4=newjsonObject.getInt("Grand Larceny");
+//                            Log.d(TAG, "Grand Larceny " + frequency4);
+//                            int frequency5=newjsonObject.getInt("Kidnapping");
+//                            Log.d(TAG, "Kidnapping" + frequency5);
+//                            int frequency6=newjsonObject.getInt("Misdemeanor Assault");
+//                            Log.d(TAG, "Misdemeanor Assault " + frequency6);
+//                            int frequency7=newjsonObject.getInt("Misdemeanor Sex Crimes");
+//                            Log.d(TAG, "Misdemeanor Sex Crimes " + frequency7);
+//                            int frequency8=newjsonObject.getInt("Offenses against Public Order");
+//                            Log.d(TAG, "Offenses against Public Order " + frequency8);
+//                            int frequency9=newjsonObject.getInt("Petit Larceny");
+//                            Log.d(TAG, "Petit Larceny " + frequency9);
+//                            int frequency10=newjsonObject.getInt("Rape");
+//                            Log.d(TAG, "Rape " + frequency10);
+//                            int frequency11=newjsonObject.getInt("Robbery");
+//                            Log.d(TAG, "Robbery" + frequency11);
+//                            int frequency12=newjsonObject.getInt("Shootings");
+//                            Log.d(TAG, "Shootings" + frequency12);
+//                            CrimeStationInformation crimeStationInformation= new CrimeStationInformation("Murder",frequency );
+//                            CrimeStationInformation crimeStationInformation2= new CrimeStationInformation("Burglary",frequency2 );
+//                            CrimeStationInformation crimeStationInformation3= new CrimeStationInformation("Felony Assault",frequency3);
+//                            CrimeStationInformation crimeStationInformation4= new CrimeStationInformation("Kidnapping",frequency4);
+//                            CrimeStationInformation crimeStationInformation5= new CrimeStationInformation("Misdemeanor Assault",frequency5);
+//                            CrimeStationInformation crimeStationInformation6= new CrimeStationInformation("Misdemeanor Sex Crimes",frequency6);
+//                            CrimeStationInformation crimeStationInformation7= new CrimeStationInformation("Offenses against Public Order",frequency7);
+//                            CrimeStationInformation crimeStationInformation8= new CrimeStationInformation("Petit Larceny",frequency8);
+//                            CrimeStationInformation crimeStationInformation9= new CrimeStationInformation("Felony Assault",frequency9);
+//                            CrimeStationInformation crimeStationInformation10= new CrimeStationInformation("Rape",frequency10);
+//                            CrimeStationInformation crimeStationInformation11= new CrimeStationInformation("Robbery",frequency11);
+//                            CrimeStationInformation crimeStationInformation12= new CrimeStationInformation("Shootings",frequency12);
+//                            cat.add(crimeStationInformation);
+//                            cat.add(crimeStationInformation2);
+//                            cat.add(crimeStationInformation3);
+//                            cat.add(crimeStationInformation4);
+//                            cat.add(crimeStationInformation5);
+//                            cat.add(crimeStationInformation6);
+//                            cat.add(crimeStationInformation7);
+//                            cat.add(crimeStationInformation8);
+//                            cat.add(crimeStationInformation9);
+//                            cat.add(crimeStationInformation10);
+//                            cat.add(crimeStationInformation11);
+//                            cat.add(crimeStationInformation12);
 
                             JSONArray jsonArray= (JSONArray) result.getJSONArray("results");
                             for (int i = 0; i< jsonArray.length();i++) {
@@ -183,39 +192,13 @@ public class StatsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-                Toast.makeText(StatsActivity.this, Integer.toString(position), Toast.LENGTH_SHORT).show();
+                Intent myintent = new Intent(StatsActivity.this, CrimeDescriptionActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Crime Description",(Serializable) cat.get(position).getC_description());
+                myintent.putExtra("BUNDLE", bundle);
+                startActivity(myintent);
             }
         });
     }
-
-    // this fills all the rows,
-//    public void fillTable (ArrayList<CrimeStationInformation> cat) {
-//        // it'll be 12 bc its 12 objects
-//        int rowCount = cat.size();
-//        Log.d("Fill Table", "rowCount = "+rowCount);
-//        // this is in the xml tablelayout name
-//        TableLayout table = (TableLayout) this.findViewById(R.id.tablelayout);
-//        for(int i=0;i<cat.size();i++) {
-//            fillRow2(table, i);
-//        }
-//    }
-//    public void fillRow2(TableLayout table, int position){
-//        LayoutInflater inflater = (LayoutInflater)
-//                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View fullRow = inflater.inflate(R.layout.rows, null);
-//        // name from xml must match
-//        TextView Name = (TextView) fullRow.findViewById(R.id.Name);
-//        // var to hold the text in
-//
-//        Name.setText(cat.get(position).getCrime_category());
-//        TextView Frequency = (TextView) fullRow.findViewById(R.id.Frequency);
-//        // first column
-//        //[noRow]
-//        Frequency.setText(Integer.toString(cat.get(position).getFrequency()));
-//
-//        //TextView Date = (TextView) fullRow.findViewById(R.id.Date);
-//        // second column
-//        //Date.setText(cat.getDate());
-//        table.addView(fullRow);
-//    }
 }

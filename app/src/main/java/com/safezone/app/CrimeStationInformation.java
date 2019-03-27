@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class CrimeStationInformation {
     private String crime_category;
     private int frequency;
-    private String date;
     private ArrayList<CrimeDescription> c_description=new ArrayList<>();
 
     public CrimeStationInformation() {
@@ -30,9 +29,9 @@ public class CrimeStationInformation {
 
     public void setFrequency(int Frequency) { frequency = Frequency;}
 
-    public String getDate() {return date;}
+    //public String getDate() {return date;}
 
-    public void setDate(String Date) {date = Date;}
+    //public void setDate(String Date) {date = Date;}
 
     public void addCrimeDescription(CrimeDescription a_crime)
     {
