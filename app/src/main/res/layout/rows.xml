@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableRow1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFF">
+
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1px"
+        android:background="#FFF"
+        android:text="Category"
+        android:textColor="#000"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/Frequency"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1px"
+        android:layout_marginLeft="251dp"
+        android:background="#FFF"
+        android:paddingLeft="10px"
+        android:paddingTop="10px"
+        android:paddingRight="20px"
+        android:paddingBottom="3px"
+        android:text="Frequency"
+        android:textColor="#000"
+        android:textSize="25dp" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/Date"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#FFF"-->
+        <!--android:textColor="#000"-->
+        <!--android:layout_marginBottom="1px"-->
+        <!--android:paddingLeft="10px"-->
+        <!--android:paddingTop="10px"-->
+        <!--android:paddingRight="20px"-->
+        <!--android:paddingBottom="3px"-->
+        <!--android:textSize="30dp"-->
+        <!--android:text="Date" />-->
+
+</RelativeLayout>

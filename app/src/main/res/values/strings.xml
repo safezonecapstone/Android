@@ -2,6 +2,8 @@
     <string name="app_name">SafeZone</string>
     <string name="google_maps_api_key">API_KEY</string>
     <string name="safezone_api_key">API_KEY</string>
+    <string name="location_name">Location: %1$s</string>
+    <string name="trains">Train: %1$s</string>
 
     <string name="date_prompt">Choose Date</string>
 
