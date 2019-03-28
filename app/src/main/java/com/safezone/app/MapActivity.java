@@ -160,13 +160,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 String line=jsonObject.getString("lines");
                                 Log.d(TAG, "Lines " + line);
 
-                                String ID=jsonObject.getString("id");
-                                Log.d(TAG, "Train ID " + ID);
+//                                String ID=jsonObject.getString("id");
+//                                Log.d(TAG, "Train ID " + ID);
+
+                                String percentile=jsonObject.getString("percentile");
+                                Log.d(TAG, "Percentile " + percentile);
 
                                 double longitude1=jsonObject.getDouble("longitude");
                                 double latitude1=jsonObject.getDouble("latitude");
 
-                                TrainInformation trainInformation2=new TrainInformation(name, "High",  "95%", latitude1, longitude1);
+                                TrainInformation trainInformation2=new TrainInformation(name, "High",  percentile, latitude1, longitude1);
                                 String [] eachline=line.split("\"");
                                 for(int j=0; j<eachline.length; j++)
                                 {

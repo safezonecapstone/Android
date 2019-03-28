@@ -18,11 +18,19 @@
         android:layout_marginTop="53dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <TextView
+        android:id="@+id/percentile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/locationName"
+        android:layout_marginTop="102dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <Button
         android:id="@+id/viewCrimes"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginTop="105dp"
+        android:layout_marginTop="155dp"
         android:background="#FFFF"
         android:textColor="#0000FF"
         android:text="View Crimes"

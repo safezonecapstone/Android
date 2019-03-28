@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 public class TrainInformation
 {
-    private String street, risk, crime_rate;
+    private String street, risk, percentile;
     private ArrayList<String> train_stop= new ArrayList<>();
     private double longitude;
     private double latitude;
@@ -21,11 +21,11 @@ public class TrainInformation
 //
 //    }
 
-    public TrainInformation(String Street_name, String Train_Risk, String Train_Crime_Rate, double latitude, double Longitude)
+    public TrainInformation(String Street_name, String Train_Risk, String Percentile, double latitude, double Longitude)
     {
         this.street = Street_name;
         this.risk = Train_Risk;
-        this.crime_rate = Train_Crime_Rate;
+        this.percentile = Percentile;
         this.latitude=latitude;
         this.longitude=Longitude;
     }
@@ -60,14 +60,14 @@ public class TrainInformation
         this.risk = Risk;
     }
 
-    public String getCrimeRate()
+    public String getPercentile()
     {
-        return crime_rate;
+        return percentile;
     }
 
-    public void setCrime_rate(String CrimeRate)
+    public void setPercentile(String Percentile)
     {
-        this.crime_rate = CrimeRate;
+        this.percentile = Percentile;
     }
 
     public double getLatitude() {

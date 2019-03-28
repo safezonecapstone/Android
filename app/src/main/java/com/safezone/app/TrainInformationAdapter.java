@@ -46,6 +46,12 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
 
         trains.setText(listOfTrains);
 
+        TextView percentile = convertView.findViewById(R.id.percentile);
+
+        String percent=getContext().getString(R.string.percentile, location.getPercentile());
+        // Populate the data into the template view using the data object
+        percentile.setText(percent);
+
         Button viewCrimeButton= (Button) convertView.findViewById(R.id.viewCrimes);
         viewCrimeButton.setOnClickListener(new View.OnClickListener(){
             @Override
