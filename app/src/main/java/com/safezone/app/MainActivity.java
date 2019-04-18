@@ -27,11 +27,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.core.app.ActivityCompat;
@@ -54,6 +57,9 @@ public class MainActivity extends Activity {
     private double mLng;
     LocationManager mLocationManager;
     LocationListener mLocationListener;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Location mCurrentLocation;
+    private boolean mLocationPermissionGranted = false;
 
 
     @Override
@@ -90,10 +96,13 @@ public class MainActivity extends Activity {
             public void onProviderDisabled(String provider) {}
         };
 
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
 
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, mLocationListener);
+            mLocationPermissionGranted = true;
         }
         else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
@@ -174,19 +183,42 @@ public class MainActivity extends Activity {
                         event.getAction() == KeyEvent.ACTION_DOWN ||
                         event.getAction() == KeyEvent.KEYCODE_ENTER) {
                     //start MapActivity
-                    startSearch();
+                    getCurrentLocation();
                 }
                 return false;
             }
         });
     }
 
-    private void startSearch() {
+    private void getCurrentLocation() {
+        try {
+            if(mLocationPermissionGranted) {
+                Task<Location> task = mFusedLocationProviderClient.getLastLocation();
+                task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            mCurrentLocation = location;
+                            startSearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                        }
+                        else {
+                            Log.d(TAG, "getCurrentLocation: can't get a location");
+                        }
+                    }
+                });
+            }
+        }
+        catch (SecurityException e) {
+            Log.e(TAG, "getCurrentLocation: SecurityException: " + e.getMessage());
+        }
+    }
+
+    private void startSearch(double lat, double lng) {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         String address = mAddress.getText().toString();
         intent.putExtra("Address", address);
-        intent.putExtra("Latitude", mLat);
-        intent.putExtra("Longitude", mLng);
+        intent.putExtra("Latitude", lat);
+        intent.putExtra("Longitude", lng);
         startActivity(intent);
     }
 
