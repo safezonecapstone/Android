@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MotionEventCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +59,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //widgets
     private ImageView mGPS;
 
-    private BottomSheetBehavior sheetBehavior;
+    private LinearLayout linearLayout;
 
     //vars
     private boolean mLocationPermissionGranted = false;
@@ -103,6 +106,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        linearLayout=(LinearLayout)findViewById(R.id.bottom_sheet);
 
         getLocationPermission();
         getAddress();
@@ -133,8 +137,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     //Api Request (get nearby stations based of address, returns subway stations)
-    private void getSubways(double latitude, double longitude)
-    {
+    private void getSubways(double latitude, double longitude) {
         Log.d(TAG, "getSubways: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
         Log.d(TAG, "getSubways: entered");
         String api_key = getString(R.string.safezone_api_key);
@@ -195,38 +198,40 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AppController.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
-    private boolean listIsAtTop(ListView listView)   {
-        if(listView.getChildCount() == 0) return true;
-        return listView.getChildAt(0).getTop() == 0;
-    }
-
     //Populate the view with traininformation
     private void populateListView() {
 
-        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.bottom_sheet);
         TrainInformationAdapter adapter=new TrainInformationAdapter(this, subwayData);
 
-        final ListView listView = (ListView) findViewById(R.id.list_item);
-
+        ListView listView = (ListView) findViewById(R.id.list_item);
         listView.setAdapter(adapter);
-        sheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int i) {
-                if (i == BottomSheetBehavior.STATE_DRAGGING) {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-                if (i == BottomSheetBehavior.STATE_DRAGGING){
-                    if(listIsAtTop(listView)){
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
-                }
-            }
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-            }
-        });
+        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
+
+//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View view, int i) {
+//                if (i==BottomSheetBehavior.STATE_EXPANDED){
+//                    Log.d(TAG, "Expanded");
+//                }
+//                else if (i==BottomSheetBehavior.STATE_DRAGGING){
+//                    Log.d(TAG, "Dragging");
+//                }
+//                else if (i==BottomSheetBehavior.STATE_COLLAPSED){
+//                    Log.d(TAG, "Collapse");
+//                }
+//                else if (i==BottomSheetBehavior.STATE_HALF_EXPANDED){
+//                    Log.d(TAG, "Half Expanded");
+//                }
+//                else if (i==BottomSheetBehavior.STATE_SETTLING){
+//                    Log.d(TAG, "Settling");
+//                }
+//
+//            }
+//            @Override
+//            public void onSlide(@NonNull View view, float v) {
+//            }
+//        });
     }
 
     private void geoLocate() {
