@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="400dp">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -15,24 +13,19 @@
             android:id="@+id/map"
             tools:context=".MapsActivity"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
-    </LinearLayout>
 
-    <View style="@style/Divider"/>
+    <!--<View style="@style/Divider"/>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="404dp">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="404dp">-->
 
-        <ListView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/list_item"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".MapActivity">
-        </ListView>
-    </LinearLayout>
+
+        <!--</ListView>-->
+    <!--</LinearLayout>-->
+    <include layout="@layout/bottom_sheet"/>
+
     <!--
         <RelativeLayout
             android:layout_width="match_parent"
@@ -78,4 +71,4 @@
         android:id="@+id/ic_gps"
         android:src="@drawable/ic_gps"/>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

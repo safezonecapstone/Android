@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -52,6 +55,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     //widgets
     private ImageView mGPS;
+
+    private BottomSheetBehavior sheetBehavior;
 
     //vars
     private boolean mLocationPermissionGranted = false;
@@ -97,14 +102,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         mGPS = (ImageView) findViewById(R.id.ic_gps);
-
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         getLocationPermission();
         getAddress();
     }
 
-    //Get info being passed from one activity to another (intent)
+    //Get address being passed from one previous activity to another (intent)
     private void getAddress() {
         Intent intent = getIntent();
         if (intent.hasExtra("Address")) {
@@ -128,8 +132,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-
-    //Api Request (get nearby stations based of address, returns subway stations
+    //Api Request (get nearby stations based of address, returns subway stations)
     private void getSubways(double latitude, double longitude)
     {
         Log.d(TAG, "getSubways: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
@@ -152,20 +155,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         try {
                             subwayData.clear();
                             for (int i = 0; i< result.length();i++) {
-                                JSONObject jsonObject = (JSONObject) result.get(i); //
-                                String name=jsonObject.getString("name");
+                                JSONObject jsonObject = (JSONObject) result.get(i); //Get each object in JSON array
+                                String name=jsonObject.getString("name"); //get train station name
                                 Log.d(TAG, "Station Name " + name);
 
-                                String line=jsonObject.getString("lines");
+                                String line=jsonObject.getString("lines"); //get all the lines in the station
                                 Log.d(TAG, "Lines " + line);
 
-//                                String ID=jsonObject.getString("id");
-//                                Log.d(TAG, "Train ID " + ID);
-
-                                String percentile=jsonObject.getString("percentile");
+                                String percentile=jsonObject.getString("percentile"); //get crime percentile
                                 Log.d(TAG, "Percentile " + percentile);
 
-                                double longitude1=jsonObject.getDouble("longitude");
+                                double longitude1=jsonObject.getDouble("longitude"); //get coordinates
                                 double latitude1=jsonObject.getDouble("latitude");
 
                                 TrainInformation trainInformation2=new TrainInformation(name, "High",  percentile, latitude1, longitude1);
@@ -174,7 +174,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 {
                                     trainInformation2.addTrainStop(eachline[j]);
                                 }
-                                subwayData.add(trainInformation2);
+                                subwayData.add(trainInformation2); //Add the subways to array
                             }
                             populateListView();
                             Log.d(TAG, "jsonData: happened" + subwayData);
@@ -195,30 +195,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AppController.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
+    private boolean listIsAtTop(ListView listView)   {
+        if(listView.getChildCount() == 0) return true;
+        return listView.getChildAt(0).getTop() == 0;
+    }
+
+    //Populate the view with traininformation
     private void populateListView() {
 
+        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.bottom_sheet);
         TrainInformationAdapter adapter=new TrainInformationAdapter(this, subwayData);
 
-        ListView listView = (ListView) findViewById(R.id.list_item);
+        final ListView listView = (ListView) findViewById(R.id.list_item);
 
         listView.setAdapter(adapter);
+        sheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-//                Intent myintent = new Intent(MapActivity.this, StatsActivity.class);
-//
-//                double longitude;
-//                double latitude;
-//                longitude=subwayData.get(position).getLongitude();
-//                latitude=subwayData.get(position).getLatitude();
-//                myintent.putExtra("Latitude", latitude);
-//                myintent.putExtra("Longitude", longitude);
-//                myintent.putExtra("Station Name", subwayData.get(position).getName());
-//
-//                startActivity(myintent);
-//            }
-//        });
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (i == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                if (i == BottomSheetBehavior.STATE_DRAGGING){
+                    if(listIsAtTop(listView)){
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+            }
+        });
     }
 
     private void geoLocate() {
