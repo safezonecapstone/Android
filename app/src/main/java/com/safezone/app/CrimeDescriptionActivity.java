@@ -21,10 +21,10 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crime);
 
         getCrimeDescription();
-
         populateView();
     }
 
+    //Retreive crime description passed by the previous activity
     public void getCrimeDescription()
     {
         Log.d(TAG, "Entering");
@@ -33,14 +33,16 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
 
             Log.d(TAG, "Entering 2");
             Bundle bundle=intent.getBundleExtra("BUNDLE");
-            crimeDescriptions = (ArrayList<CrimeDescription>) bundle.getSerializable("Crime Description");
+            crimeDescriptions = (ArrayList<CrimeDescription>) bundle.getSerializable("Crime Description"); //Gets the crime description
         }
+
         for(int i=0; i<crimeDescriptions.size(); i++)
         {
             Log.d(TAG, crimeDescriptions.get(i).getDate_());
         }
     }
 
+    //Populate the view with crime description and date using costume adapter
     public void populateView()
     {
         CrimeDescriptionAdapter adapter=new CrimeDescriptionAdapter(this, crimeDescriptions);

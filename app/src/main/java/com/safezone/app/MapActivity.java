@@ -59,7 +59,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //widgets
     private ImageView mGPS;
 
-    private LinearLayout linearLayout;
+
 
     //vars
     private boolean mLocationPermissionGranted = false;
@@ -106,7 +106,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        linearLayout=(LinearLayout)findViewById(R.id.bottom_sheet);
+
 
         getLocationPermission();
         getAddress();
@@ -201,37 +201,56 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Populate the view with traininformation
     private void populateListView() {
 
+        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.bottom_sheet);
+
         TrainInformationAdapter adapter=new TrainInformationAdapter(this, subwayData);
 
-        ListView listView = (ListView) findViewById(R.id.list_item);
+        final ListView listView = (ListView) findViewById(R.id.list_item);
         listView.setAdapter(adapter);
 
-        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
+        final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View view, int i) {
-//                if (i==BottomSheetBehavior.STATE_EXPANDED){
-//                    Log.d(TAG, "Expanded");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_DRAGGING){
-//                    Log.d(TAG, "Dragging");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_COLLAPSED){
-//                    Log.d(TAG, "Collapse");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_HALF_EXPANDED){
-//                    Log.d(TAG, "Half Expanded");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_SETTLING){
-//                    Log.d(TAG, "Settling");
-//                }
-//
-//            }
-//            @Override
-//            public void onSlide(@NonNull View view, float v) {
-//            }
-//        });
+        // change the state of the bottom sheet
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (i==BottomSheetBehavior.STATE_EXPANDED){
+                    Log.d(TAG, "Expanded");
+                }
+                else if (i==BottomSheetBehavior.STATE_DRAGGING){
+                    if(listIsAtTop(listView)){
+                        Log.d(TAG, "Dragging");
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_DRAGGING);
+                    }
+                    else{
+                        Log.d(TAG, "Expanded");
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+
+                }
+                else if (i==BottomSheetBehavior.STATE_COLLAPSED){
+                    Log.d(TAG, "Collapse");
+                }
+                else if (i==BottomSheetBehavior.STATE_HALF_EXPANDED){
+                    Log.d(TAG, "Half Expanded");
+                }
+                else if (i==BottomSheetBehavior.STATE_SETTLING){
+                    Log.d(TAG, "Settling");
+                }
+
+            }
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+            }
+        });
+    }
+
+    private boolean listIsAtTop(ListView listView)   {
+        if(listView.getChildCount() == 0) return true;
+        return listView.getChildAt(0).getTop() == 0;
     }
 
     private void geoLocate() {
