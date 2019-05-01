@@ -58,6 +58,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private String mAddress;
+    private String mDestinationAddress;
     private double mCurrentLatitude;
     private double mCurrentLongitude;
     private ArrayList<TrainInformation> subwayData=new ArrayList<TrainInformation>();
@@ -111,6 +112,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mAddress = intent.getStringExtra("Address");
             mCurrentLatitude = intent.getDoubleExtra("Latitude", 0.0);
             mCurrentLongitude = intent.getDoubleExtra("Longitude", 0.0);
+            mDestinationAddress = intent.getStringExtra("Destination");
+            Log.d(TAG, "address: " + mAddress + " destination: " + mDestinationAddress);
         }
     }
 

@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 
     //widgets
     private EditText mAddress;
+    private EditText mDestinationAddress;
 
     //vars
     private double mLat;
@@ -68,6 +69,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mAddress = (EditText) findViewById(R.id.input_search_main);
+        mDestinationAddress = (EditText) findViewById(R.id.input_search_main2);
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -216,9 +218,11 @@ public class MainActivity extends Activity {
     private void startSearch(double lat, double lng) {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         String address = mAddress.getText().toString();
+        String destination_address = mDestinationAddress.getText().toString();
         intent.putExtra("Address", address);
         intent.putExtra("Latitude", lat);
         intent.putExtra("Longitude", lng);
+        intent.putExtra("Destination", destination_address);
         startActivity(intent);
     }
 
