@@ -15,4 +15,8 @@
         <item name="android:background">#000000</item>
     </style>
 
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">@color/colorYellow</item>
+    </style>
+
 </resources>

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,8 @@ public class MainActivity extends Activity {
     //widgets
     private EditText mAddress;
     private EditText mDestinationAddress;
+    private Button mNearby;
+    private Button mRoutes;
 
     //vars
     private double mLat;
@@ -70,6 +73,8 @@ public class MainActivity extends Activity {
 
         mAddress = (EditText) findViewById(R.id.input_search_main);
         mDestinationAddress = (EditText) findViewById(R.id.input_search_main2);
+        mNearby = (Button) findViewById(R.id.buttonNearby);
+        mRoutes = (Button) findViewById(R.id.buttonRoutes);
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -177,7 +182,7 @@ public class MainActivity extends Activity {
     }
 
     private void init() {
-        mAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*mAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH ||
@@ -189,33 +194,78 @@ public class MainActivity extends Activity {
                 }
                 return false;
             }
+        });*/
+        mNearby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentLocation(true);
+            }
+        });
+        mRoutes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentLocation(false);
+            }
         });
     }
 
-    private void getCurrentLocation() {
-        try {
-            if(mLocationPermissionGranted) {
-                Task<Location> task = mFusedLocationProviderClient.getLastLocation();
-                task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            mCurrentLocation = location;
-                            startSearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+    private void getCurrentLocation(boolean nearby) {
+        if (nearby == true) {
+            try {
+                if(mLocationPermissionGranted) {
+                    Task<Location> task = mFusedLocationProviderClient.getLastLocation();
+                    task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                mCurrentLocation = location;
+                                startNearbySearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                            }
+                            else {
+                                Log.d(TAG, "getCurrentLocation: can't get a location");
+                            }
                         }
-                        else {
-                            Log.d(TAG, "getCurrentLocation: can't get a location");
-                        }
-                    }
-                });
+                    });
+                }
+            }
+            catch (SecurityException e) {
+                Log.e(TAG, "getCurrentLocation: SecurityException: " + e.getMessage());
             }
         }
-        catch (SecurityException e) {
-            Log.e(TAG, "getCurrentLocation: SecurityException: " + e.getMessage());
+        else {
+            try {
+                if(mLocationPermissionGranted) {
+                    Task<Location> task = mFusedLocationProviderClient.getLastLocation();
+                    task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                mCurrentLocation = location;
+                                startRoutesSearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                            }
+                            else {
+                                Log.d(TAG, "getCurrentLocation: can't get a location");
+                            }
+                        }
+                    });
+                }
+            }
+            catch (SecurityException e) {
+                Log.e(TAG, "getCurrentLocation: SecurityException: " + e.getMessage());
+            }
         }
     }
 
-    private void startSearch(double lat, double lng) {
+    private void startNearbySearch(double lat, double lng) {
+        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        String address = mAddress.getText().toString();
+        intent.putExtra("Address", address);
+        intent.putExtra("Latitude", lat);
+        intent.putExtra("Longitude", lng);
+        startActivity(intent);
+    }
+
+    private void startRoutesSearch(double lat, double lng) {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         String address = mAddress.getText().toString();
         String destination_address = mDestinationAddress.getText().toString();

@@ -69,6 +69,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String mDestinationAddress;
     private double mCurrentLatitude;
     private double mCurrentLongitude;
+    private double mDestinationLatitude;
+    private double mDestinationLongitude;
     private ArrayList<TrainInformation> subwayData=new ArrayList<TrainInformation>();
 
     @Override
@@ -88,10 +90,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.d(TAG, "address_null: " + mAddress);
                 getDeviceLocation();
                 Log.d(TAG, "onMapReady empty: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
+                if (!mDestinationAddress.isEmpty()){
+                    geoLocate(mDestinationAddress, true);
+                }
             }
             else {
                 Log.d(TAG, "address_not_null: " + mAddress);
-                geoLocate();
+                geoLocate(mAddress, false);
+                if (!mDestinationAddress.isEmpty()){
+                    geoLocate(mDestinationAddress, true);
+                }
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -116,12 +124,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Get address being passed from one previous activity to another (intent)
     private void getAddress() {
         Intent intent = getIntent();
-        if (intent.hasExtra("Address")) {
+        if (intent.hasExtra("Destination")) {
             mAddress = intent.getStringExtra("Address");
             mCurrentLatitude = intent.getDoubleExtra("Latitude", 0.0);
             mCurrentLongitude = intent.getDoubleExtra("Longitude", 0.0);
             mDestinationAddress = intent.getStringExtra("Destination");
             Log.d(TAG, "address: " + mAddress + " destination: " + mDestinationAddress);
+        }
+        else {
+            mAddress = intent.getStringExtra("Address");
+            mCurrentLatitude = intent.getDoubleExtra("Latitude", 0.0);
+            mCurrentLongitude = intent.getDoubleExtra("Longitude", 0.0);
+            Log.d(TAG, "address: " + mAddress);
         }
     }
 
@@ -256,10 +270,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return listView.getChildAt(0).getTop() == 0;
     }
 
-    private void geoLocate() {
+    private void geoLocate(String location, boolean destination) {
         Log.d(TAG, "geoLocate: geoLocating");
 
-        String searchString = mAddress;
+        String searchString = location;
 
         Geocoder geocoder = new Geocoder(MapActivity.this);
         List<Address> list = new ArrayList<>();
@@ -271,13 +285,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         if(list.size() > 0) {
-            Address address = list.get(0);
+            if (destination == false) {
+                Address address = list.get(0);
 
-            mCurrentLatitude = address.getLatitude();
-            mCurrentLongitude = address.getLongitude();
+                mCurrentLatitude = address.getLatitude();
+                mCurrentLongitude = address.getLongitude();
 
-            Log.d(TAG, "geoLocate: found a location: " + address.toString());
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+                Log.d(TAG, "geoLocate: found a location: " + address.toString());
+                moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+            }
+            else {
+                Address address = list.get(0);
+
+                mDestinationLatitude = address.getLatitude();
+                mDestinationLongitude = address.getLongitude();
+
+                Log.d(TAG, "geoLocate: found a location: " + address.toString());
+                //moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+            }
         }
     }
 
@@ -359,6 +384,69 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         }
+    }
+
+    private void getRoutes (double origin_latitude, double origin_longitude,
+                            double dest_latitude, double dest_longitude) {
+        String api_key = getString(R.string.safezone_api_key);
+        StringBuilder routes =
+                new StringBuilder("https://api-dot-united-triode-233023.appspot.com/api/route?");
+        routes.append("origin_latitude=").append(origin_latitude);
+        routes.append("&origin_longitude=").append(origin_longitude);
+        routes.append("&dest_latitude=").append(dest_longitude);
+        routes.append("&dest_longitude=").append(dest_longitude);
+        routes.append("&API_KEY=" + api_key);
+
+        String routesUrl = routes.toString();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, routesUrl, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray result) {
+
+                        Log.i(TAG, "onResponse: Result= " + result.toString());
+                        //*****************This will need to be adjusted to the actual json ***************************
+                        /*try {
+                            subwayData.clear();
+                            for (int i = 0; i< result.length();i++) {
+                                JSONObject jsonObject = (JSONObject) result.get(i); //Get each object in JSON array
+                                String name=jsonObject.getString("name"); //get train station name
+                                Log.d(TAG, "Station Name " + name);
+
+                                String line=jsonObject.getString("lines"); //get all the lines in the station
+                                Log.d(TAG, "Lines " + line);
+
+                                String percentile=jsonObject.getString("percentile"); //get crime percentile
+                                Log.d(TAG, "Percentile " + percentile);
+
+                                double longitude1=jsonObject.getDouble("longitude"); //get coordinates
+                                double latitude1=jsonObject.getDouble("latitude");
+
+                                TrainInformation trainInformation2=new TrainInformation(name, "High",  percentile, latitude1, longitude1);
+                                String [] eachline=line.split("\"");
+                                for(int j=0; j<eachline.length; j++)
+                                {
+                                    trainInformation2.addTrainStop(eachline[j]);
+                                }
+                                subwayData.add(trainInformation2); //Add the subways to array
+                            }
+                            populateListView();
+                            Log.d(TAG, "jsonData: happened" + subwayData);
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "getSubways: Error = " + e.getMessage());
+                        }*/
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: Error= " + error);
+                        Log.e(TAG, "onErrorResponse: Error= " + error.getMessage());
+                    }
+                });
+        AppController.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
 }
