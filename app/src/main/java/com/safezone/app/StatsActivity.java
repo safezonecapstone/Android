@@ -53,9 +53,9 @@ public class StatsActivity extends AppCompatActivity {
 
         getAddress();
         getCrimes();
-        // fills the table
     }
 
+    //Gets address of station user wants to view
     private void getAddress() {
         Intent intent = getIntent();
         if (intent.hasExtra("Station Name")) {
@@ -67,8 +67,8 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-    private void getCrimes()
-    {
+    //get crimes associated with that station
+    private void getCrimes() {
         Log.d(TAG, "getCrimes: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
         Log.d(TAG, "getCrimes: entered");
         String api_key = getString(R.string.safezone_api_key);
@@ -82,15 +82,13 @@ public class StatsActivity extends AppCompatActivity {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, crimesURL, null,
                 new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject result) {
                         Log.i(TAG, "onResponse: Result= " + result.toString());
                         try {
                             cat.clear();
                             JSONObject newjsonObject = (JSONObject) result.getJSONObject("frequencies");
-                            //Retrieve each frequency with built in json methods
-
+                            //Retrieve each frequency of each crime with built in json methods
                             for(int i=0; i<category.length; i++)
                             {
                                 int frequency=newjsonObject.getInt(category[i]);
@@ -99,53 +97,7 @@ public class StatsActivity extends AppCompatActivity {
                                 cat.add(crimeStationInformation);
                             }
 
-//                            int frequency2=newjsonObject.getInt("Burglary");
-//                            Log.d(TAG, "Burglary " + frequency2);
-//                            int frequency3=newjsonObject.getInt("Felony Assault");
-//                            Log.d(TAG, "Felony Assault " + frequency3);
-//                            int frequency4=newjsonObject.getInt("Grand Larceny");
-//                            Log.d(TAG, "Grand Larceny " + frequency4);
-//                            int frequency5=newjsonObject.getInt("Kidnapping");
-//                            Log.d(TAG, "Kidnapping" + frequency5);
-//                            int frequency6=newjsonObject.getInt("Misdemeanor Assault");
-//                            Log.d(TAG, "Misdemeanor Assault " + frequency6);
-//                            int frequency7=newjsonObject.getInt("Misdemeanor Sex Crimes");
-//                            Log.d(TAG, "Misdemeanor Sex Crimes " + frequency7);
-//                            int frequency8=newjsonObject.getInt("Offenses against Public Order");
-//                            Log.d(TAG, "Offenses against Public Order " + frequency8);
-//                            int frequency9=newjsonObject.getInt("Petit Larceny");
-//                            Log.d(TAG, "Petit Larceny " + frequency9);
-//                            int frequency10=newjsonObject.getInt("Rape");
-//                            Log.d(TAG, "Rape " + frequency10);
-//                            int frequency11=newjsonObject.getInt("Robbery");
-//                            Log.d(TAG, "Robbery" + frequency11);
-//                            int frequency12=newjsonObject.getInt("Shootings");
-//                            Log.d(TAG, "Shootings" + frequency12);
-//                            CrimeStationInformation crimeStationInformation= new CrimeStationInformation("Murder",frequency );
-//                            CrimeStationInformation crimeStationInformation2= new CrimeStationInformation("Burglary",frequency2 );
-//                            CrimeStationInformation crimeStationInformation3= new CrimeStationInformation("Felony Assault",frequency3);
-//                            CrimeStationInformation crimeStationInformation4= new CrimeStationInformation("Kidnapping",frequency4);
-//                            CrimeStationInformation crimeStationInformation5= new CrimeStationInformation("Misdemeanor Assault",frequency5);
-//                            CrimeStationInformation crimeStationInformation6= new CrimeStationInformation("Misdemeanor Sex Crimes",frequency6);
-//                            CrimeStationInformation crimeStationInformation7= new CrimeStationInformation("Offenses against Public Order",frequency7);
-//                            CrimeStationInformation crimeStationInformation8= new CrimeStationInformation("Petit Larceny",frequency8);
-//                            CrimeStationInformation crimeStationInformation9= new CrimeStationInformation("Felony Assault",frequency9);
-//                            CrimeStationInformation crimeStationInformation10= new CrimeStationInformation("Rape",frequency10);
-//                            CrimeStationInformation crimeStationInformation11= new CrimeStationInformation("Robbery",frequency11);
-//                            CrimeStationInformation crimeStationInformation12= new CrimeStationInformation("Shootings",frequency12);
-//                            cat.add(crimeStationInformation);
-//                            cat.add(crimeStationInformation2);
-//                            cat.add(crimeStationInformation3);
-//                            cat.add(crimeStationInformation4);
-//                            cat.add(crimeStationInformation5);
-//                            cat.add(crimeStationInformation6);
-//                            cat.add(crimeStationInformation7);
-//                            cat.add(crimeStationInformation8);
-//                            cat.add(crimeStationInformation9);
-//                            cat.add(crimeStationInformation10);
-//                            cat.add(crimeStationInformation11);
-//                            cat.add(crimeStationInformation12);
-
+                            //Get crime descriptions of each crime, along with date of occurance
                             JSONArray jsonArray= (JSONArray) result.getJSONArray("results");
                             for (int i = 0; i< jsonArray.length();i++) {
                                 JSONObject jsonresultsObject = (JSONObject) jsonArray.get(i);
@@ -164,7 +116,6 @@ public class StatsActivity extends AppCompatActivity {
                             }
 
                             populateCrimeListView();
-                            //fillTable(cat);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -194,6 +145,7 @@ public class StatsActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
+        //Pass crime description to next activity so user can view each specific crime
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {

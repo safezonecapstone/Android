@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
 
+    private static final String TAG = "StatsActivity";
     private Context acitivity;
     public TrainInformationAdapter(Context context, ArrayList<TrainInformation> trains){
         super(context, 0, trains);
@@ -38,17 +40,21 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         TextView trains = convertView.findViewById(R.id.trains);
 
         StringBuilder builder = new StringBuilder();
-        for(int i=0; i<location.getTrainStop().size(); i++)
-        {
+        ArrayList<String> trainstops=location.getTrainStop();
+
+        for(int i=0; i<location.getTrainStop().size(); i++) {
             builder.append(location.getTrainStop().get(i)+ " ");
         }
         String listOfTrains=getContext().getString(R.string.trains, builder.toString());
-
         trains.setText(listOfTrains);
+
 
         TextView percentile = convertView.findViewById(R.id.percentile);
 
         String percent=getContext().getString(R.string.percentile, location.getPercentile());
+
+
+
         // Populate the data into the template view using the data object
         percentile.setText(percent);
 
