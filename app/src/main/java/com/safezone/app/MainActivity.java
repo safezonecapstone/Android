@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 mCurrentLocation = location;
-                                startRoutesSearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                                //startRoutesSearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             }
                             else {
                                 Log.d(TAG, "getCurrentLocation: can't get a location");
@@ -257,16 +257,16 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    private void startRoutesSearch(double lat, double lng) {
-        Intent intent = new Intent(MainActivity.this, RouteMap.class);
-        String address = mAddress.getText().toString();
-        String destination_address = mDestinationAddress.getText().toString();
-        intent.putExtra("Address", address);
-        intent.putExtra("Latitude", lat);
-        intent.putExtra("Longitude", lng);
-        intent.putExtra("Destination", destination_address);
-        startActivity(intent);
-    }
+//    private void startRoutesSearch(double lat, double lng) {
+//        Intent intent = new Intent(MainActivity.this, RouteMap.class);
+//        String address = mAddress.getText().toString();
+//        String destination_address = mDestinationAddress.getText().toString();
+//        intent.putExtra("Address", address);
+//        intent.putExtra("Latitude", lat);
+//        intent.putExtra("Longitude", lng);
+//        intent.putExtra("Destination", destination_address);
+//        startActivity(intent);
+//    }
 
     public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
