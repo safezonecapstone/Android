@@ -182,19 +182,6 @@ public class MainActivity extends Activity {
     }
 
     private void init() {
-        /*mAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event.getAction() == KeyEvent.ACTION_DOWN ||
-                        event.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    //start MapActivity
-                    getCurrentLocation();
-                }
-                return false;
-            }
-        });*/
         mNearby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,7 +191,12 @@ public class MainActivity extends Activity {
         mRoutes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCurrentLocation(false);
+                if (mDestinationAddress.getText().toString().trim().length() > 0) {
+                    getCurrentLocation(false);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Destination cannot be empty", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -266,7 +258,7 @@ public class MainActivity extends Activity {
     }
 
     private void startRoutesSearch(double lat, double lng) {
-        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        Intent intent = new Intent(MainActivity.this, RouteMap.class);
         String address = mAddress.getText().toString();
         String destination_address = mDestinationAddress.getText().toString();
         intent.putExtra("Address", address);
