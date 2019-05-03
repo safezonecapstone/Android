@@ -28,9 +28,13 @@ import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
+import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.listeners.TableDataClickListener;
+import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -138,24 +142,52 @@ public class StatsActivity extends AppCompatActivity {
         TextView textView=(TextView) findViewById(R.id.Address);
 
         textView.setText(address);
+        final String[] TableHeader={"Category", "Frequency"};
+        SortableTableView<CrimeStationInformation> crimeStationInformationSortableTableView=
+                (SortableTableView<CrimeStationInformation>)findViewById(R.id.tableView);
+        StatsTableAdapter statsTableAdapter=new StatsTableAdapter(this, cat);
+        crimeStationInformationSortableTableView.setDataAdapter(statsTableAdapter);
+        crimeStationInformationSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
 
-        CrimeStationInformationAdapter adapter=new CrimeStationInformationAdapter(this, cat);
-
-        ListView listView = (ListView) findViewById(R.id.crime_item);
-
-        listView.setAdapter(adapter);
-
-        //Pass crime description to next activity so user can view each specific crime
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        crimeStationInformationSortableTableView.setColumnComparator(1, new FreuencyComparator());
+        crimeStationInformationSortableTableView.addDataClickListener(new TableDataClickListener<CrimeStationInformation>() {
             @Override
-            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+            public void onDataClicked(int rowIndex, CrimeStationInformation clickedData) {
                 Intent myintent = new Intent(StatsActivity.this, CrimeDescriptionActivity.class);
 
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("Crime Description",(Serializable) cat.get(position).getC_description());
+                bundle.putSerializable("Crime Description",(Serializable) cat.get(rowIndex).getC_description());
                 myintent.putExtra("BUNDLE", bundle);
                 startActivity(myintent);
+
             }
         });
+
+//        CrimeStationInformationAdapter adapter=new CrimeStationInformationAdapter(this, cat);
+//
+//        ListView listView = (ListView) findViewById(R.id.crime_item);
+//
+//        listView.setAdapter(adapter);
+//
+//        //Pass crime description to next activity so user can view each specific crime
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+//                Intent myintent = new Intent(StatsActivity.this, CrimeDescriptionActivity.class);
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("Crime Description",(Serializable) cat.get(position).getC_description());
+//                myintent.putExtra("BUNDLE", bundle);
+//                startActivity(myintent);
+//            }
+//        });
+    }
+
+    private static class FreuencyComparator implements Comparator<CrimeStationInformation> {
+
+        @Override
+        public int compare(CrimeStationInformation o1, CrimeStationInformation o2) {
+            return ((Integer)o1.getFrequency()).compareTo(o2.getFrequency());
+        }
     }
 }
