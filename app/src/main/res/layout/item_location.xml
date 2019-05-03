@@ -10,13 +10,33 @@
         android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/trains"
+    <!--<TextView-->
+        <!--android:id="@+id/trains"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_alignTop="@+id/locationName"-->
+        <!--android:layout_marginTop="53dp"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<ImageView-->
+        <!--android:id="@+id/trains"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_alignTop="@+id/locationName"-->
+        <!--android:layout_marginTop="53dp"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+    <GridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/grid_view"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignTop="@+id/locationName"
+        android:columnWidth="90dp"
         android:layout_marginTop="53dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:focusable="false"/>
 
     <TextView
         android:id="@+id/percentile"
@@ -26,14 +46,14 @@
         android:layout_marginTop="102dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/viewCrimes"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="155dp"
-        android:background="#FFFF"
-        android:textColor="#0000FF"
-        android:text="View Crimes"
-        android:textSize="15dp" />
+    <!--<Button-->
+        <!--android:id="@+id/viewCrimes"-->
+        <!--android:layout_width="150dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginTop="155dp"-->
+        <!--android:background="#FFFF"-->
+        <!--android:textColor="#0000FF"-->
+        <!--android:text="View Crimes"-->
+        <!--android:textSize="15dp" />-->
 
 </RelativeLayout>
