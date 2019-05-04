@@ -66,7 +66,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
     private double mCurrentLongitude;
     private double mDestinationLatitude;
     private double mDestinationLongitude;
-    private ArrayList<TrainInformation> subwayData=new ArrayList<TrainInformation>();
+    private ArrayList<Routes> routesData=new ArrayList<Routes>();
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -106,7 +106,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_route_map);
 
         mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -143,122 +143,46 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         });
     }
 
-    //Api Request (get nearby stations based of address, returns subway stations)
-//    private void getSubways(double latitude, double longitude) {
-//        Log.d(TAG, "getSubways: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
-//        Log.d(TAG, "getSubways: entered");
-//        String api_key = getString(R.string.safezone_api_key);
-//        StringBuilder subways =
-//                new StringBuilder("https://api-dot-united-triode-233023.appspot.com/api/stations/nearby?");
-//        subways.append("latitude=").append(latitude);
-//        subways.append("&longitude=").append(longitude);
-//        subways.append("&API_KEY=" + api_key);
-//
-//        String subwaysURL = subways.toString();
-//
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, subwaysURL, null,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray result) {
-//
-//                        Log.i(TAG, "onResponse: Result= " + result.toString());
-//                        try {
-//                            subwayData.clear();
-//                            for (int i = 0; i< result.length();i++) {
-//                                JSONObject jsonObject = (JSONObject) result.get(i); //Get each object in JSON array
-//                                String name=jsonObject.getString("name"); //get train station name
-//                                Log.d(TAG, "Station Name " + name);
-//
-//                                String line=jsonObject.getString("lines"); //get all the lines in the station
-//                                Log.d(TAG, "Lines " + line);
-//
-//                                String percentile=jsonObject.getString("percentile"); //get crime percentile
-//                                Log.d(TAG, "Percentile " + percentile);
-//
-//                                double longitude1=jsonObject.getDouble("longitude"); //get coordinates
-//                                double latitude1=jsonObject.getDouble("latitude");
-//
-//                                TrainInformation trainInformation2=new TrainInformation(name, "High",  percentile, latitude1, longitude1);
-//                                String [] eachline=line.split("\"");
-//                                for(int j=0; j<eachline.length; j++)
-//                                {
-//                                    trainInformation2.addTrainStop(eachline[j]);
-//                                }
-//                                subwayData.add(trainInformation2); //Add the subways to array
-//                            }
-//                            populateListView();
-//                            Log.d(TAG, "jsonData: happened" + subwayData);
-//                        }
-//                        catch (JSONException e) {
-//                            e.printStackTrace();
-//                            Log.e(TAG, "getSubways: Error = " + e.getMessage());
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.e(TAG, "onErrorResponse: Error= " + error);
-//                        Log.e(TAG, "onErrorResponse: Error= " + error.getMessage());
-//                    }
-//                });
-//        AppController.getInstance().addToRequestQueue(jsonArrayRequest);
-//    }
+    //Populate the view with routes
+    private void populateListView() {
 
-    //Populate the view with traininformation
-//    private void populateListView() {
-//
-//        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.bottom_sheet);
-//
-//        TrainInformationAdapter adapter=new TrainInformationAdapter(this, subwayData);
-//
-//        final ListView listView = (ListView) findViewById(R.id.list_item);
-//        listView.setAdapter(adapter);
-//
-//        final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
-//
-//        // change the state of the bottom sheet
-//        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//
-//
-//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View view, int i) {
-//                if (i==BottomSheetBehavior.STATE_EXPANDED){
-//                    Log.d(TAG, "Expanded");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_DRAGGING){
-//                    if(listIsAtTop(listView)){
-//                        Log.d(TAG, "Dragging");
-//                        sheetBehavior.setState(BottomSheetBehavior.STATE_DRAGGING);
-//                    }
-//                    else{
-//                        Log.d(TAG, "Expanded");
-//                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                    }
-//
-//                }
-//                else if (i==BottomSheetBehavior.STATE_COLLAPSED){
-//                    Log.d(TAG, "Collapse");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_HALF_EXPANDED){
-//                    Log.d(TAG, "Half Expanded");
-//                }
-//                else if (i==BottomSheetBehavior.STATE_SETTLING){
-//                    Log.d(TAG, "Settling");
-//                }
-//
-//            }
-//            @Override
-//            public void onSlide(@NonNull View view, float v) {
-//            }
-//        });
-//    }
-//
-//    private boolean listIsAtTop(ListView listView)   {
-//        if(listView.getChildCount() == 0) return true;
-//        return listView.getChildAt(0).getTop() == 0;
-//    }
+        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.route_bottom_sheet);
+
+        RoutesAdapter routesAdapter=new RoutesAdapter(this, routesData);
+
+        final ListView listView = (ListView) findViewById(R.id.routes);
+        listView.setAdapter(routesAdapter);
+
+        final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
+
+        // change the state of the bottom sheet
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (i==BottomSheetBehavior.STATE_DRAGGING){
+                    if(listIsAtTop(listView)){
+                        Log.d(TAG, "Dragging");
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_DRAGGING);
+                    }
+                    else{
+                        Log.d(TAG, "Expanded");
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+            }
+        });
+    }
+
+    private boolean listIsAtTop(ListView listView)   {
+        if(listView.getChildCount() == 0) return true;
+        return listView.getChildAt(0).getTop() == 0;
+    }
 
     private void geoLocate(String location, boolean destination) {
         Log.d(TAG, "geoLocate: geoLocating");
@@ -387,6 +311,9 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         routes.append("&dest_longitude=").append(dest_longitude);
         routes.append("&API_KEY=" + api_key);
 
+        Log.d(TAG, "Source " + origin_latitude + origin_longitude);
+        Log.d(TAG, "Destination " + dest_latitude + dest_longitude);
+
         String routesUrl = routes.toString();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, routesUrl, null,
@@ -394,39 +321,39 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                     @Override
                     public void onResponse(JSONArray result) {
 
-                        Log.i(TAG, "onResponse: Result= " + result.toString());
+                        Log.d(TAG, "onResponse: Result= " + result.toString());
                         //*****************This will need to be adjusted to the actual json ***************************
-                        /*try {
-                            subwayData.clear();
-                            for (int i = 0; i< result.length();i++) {
+                        try {
+                            routesData.clear();
+                            for (int i = 0; i< result.length(); i++) {
                                 JSONObject jsonObject = (JSONObject) result.get(i); //Get each object in JSON array
-                                String name=jsonObject.getString("name"); //get train station name
-                                Log.d(TAG, "Station Name " + name);
+                                String rating = jsonObject.getString("rating"); //get train station name
+                                Log.d(TAG, "Rating: " + rating);
+//
+                                String leg = jsonObject.getString("leg");
+                                JSONObject LEG=(JSONObject) jsonObject.getJSONObject("leg");
+                                Log.d(TAG, "Leg: " + leg);
 
-                                String line=jsonObject.getString("lines"); //get all the lines in the station
-                                Log.d(TAG, "Lines " + line);
+                                String startingPoint=LEG.getString("start_address");
+                                Log.d(TAG, "Start Address: " + startingPoint);
 
-                                String percentile=jsonObject.getString("percentile"); //get crime percentile
-                                Log.d(TAG, "Percentile " + percentile);
+                                String endingPoint=LEG.getString("end_address");
+                                Log.d(TAG, "End Address: " + endingPoint);
 
-                                double longitude1=jsonObject.getDouble("longitude"); //get coordinates
-                                double latitude1=jsonObject.getDouble("latitude");
+                                JSONObject duration=LEG.getJSONObject("duration");
+                                String durationTime=duration.getString("text");
+                                Log.d(TAG, "Duration: " + durationTime);
 
-                                TrainInformation trainInformation2=new TrainInformation(name, "High",  percentile, latitude1, longitude1);
-                                String [] eachline=line.split("\"");
-                                for(int j=0; j<eachline.length; j++)
-                                {
-                                    trainInformation2.addTrainStop(eachline[j]);
-                                }
-                                subwayData.add(trainInformation2); //Add the subways to array
+                                Routes routes=new Routes(startingPoint, endingPoint, durationTime, rating);
+                                routesData.add(routes);
                             }
                             populateListView();
-                            Log.d(TAG, "jsonData: happened" + subwayData);
+                            Log.d(TAG, "jsonData: happened" + routesData);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
                             Log.e(TAG, "getSubways: Error = " + e.getMessage());
-                        }*/
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -438,5 +365,4 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 });
         AppController.getInstance().addToRequestQueue(jsonArrayRequest);
     }
-
 }

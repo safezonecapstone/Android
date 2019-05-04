@@ -24,7 +24,7 @@
 
     <!--</ListView>-->
     <!--</LinearLayout>-->
-    <include layout="@layout/bottom_sheet"/>
+    <include layout="@layout/routes_bottom_sheet"/>
 
     <!--
         <RelativeLayout
