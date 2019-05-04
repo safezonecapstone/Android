@@ -346,6 +346,26 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
                                 Routes routes=new Routes(startingPoint, endingPoint, durationTime, rating);
                                 routesData.add(routes);
+
+                                JSONArray steps=LEG.getJSONArray("steps");
+                                Log.d(TAG, steps.toString());
+                                for(int j=0; j<steps.length(); j++){
+                                    JSONObject eachSteps = (JSONObject) steps.get(j);
+
+                                    if(eachSteps.getString("travel_mode").equals("WALKING")) {
+                                        String instructions=eachSteps.getString("html_instructions");
+                                        Instructions instructions1=new Instructions("WALKING", instructions);
+                                        routesData.get(i).addInstructions(instructions1);
+
+                                    }
+                                    else if(eachSteps.getString("travel_mode").equals("TRANSIT")) {
+                                        JSONObject transit=eachSteps.getJSONObject("transit_details");
+                                        JSONObject subwayLine=transit.getJSONObject("line");
+                                        String lineName=subwayLine.getString("short_name");
+                                        Instructions instructions1=new Instructions("TRANSIT", lineName);
+                                        routesData.get(i).addInstructions(instructions1);
+                                    }
+                                }
                             }
                             populateListView();
                             Log.d(TAG, "jsonData: happened" + routesData);

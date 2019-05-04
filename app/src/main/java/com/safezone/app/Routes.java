@@ -1,11 +1,15 @@
 package com.safezone.app;
 
+import java.util.ArrayList;
+
 public class Routes {
 
     private String startingAddress;
     private String endingAddress;
     private String rating;
     private String duration;
+    private ArrayList<Instructions> instructions=new ArrayList<>();
+    //private ArrayList<String> subways=new ArrayList<>();
 
     Routes(String start, String end, String rate, String time){
         startingAddress=start;
@@ -29,4 +33,14 @@ public class Routes {
     public String getStartingAddress() {
         return startingAddress;
     }
+
+    public void addInstructions(Instructions instruct){
+       instructions.add(instruct);
+    }
+
+
+    public ArrayList<Instructions> getInstructions() {
+        return instructions;
+    }
+
 }
