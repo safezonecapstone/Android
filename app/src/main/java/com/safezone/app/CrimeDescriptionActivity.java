@@ -6,9 +6,15 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class CrimeDescriptionActivity extends AppCompatActivity {
 
@@ -45,8 +51,29 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
     //Populate the view with crime description and date using costume adapter
     public void populateView()
     {
-        CrimeDescriptionAdapter adapter=new CrimeDescriptionAdapter(this, crimeDescriptions);
-        ListView listView = (ListView) findViewById(R.id.crime);
-        listView.setAdapter(adapter);
+        final String[] TableHeader={"Description", "Date"};
+        SortableTableView<CrimeDescription> crimeDescriptionSortableTableView=
+                (SortableTableView<CrimeDescription>)findViewById(R.id.tableViewCrimeDescription);
+        CrimeDescriptionTableAdapter crimeDescriptionTableAdapter=new CrimeDescriptionTableAdapter(this, crimeDescriptions);
+        crimeDescriptionSortableTableView.setDataAdapter(crimeDescriptionTableAdapter);
+        crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
+
+        crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator());
+//        CrimeDescriptionAdapter adapter=new CrimeDescriptionAdapter(this, crimeDescriptions);
+//        ListView listView = (ListView) findViewById(R.id.crime);
+//        listView.setAdapter(adapter);
+    }
+
+    private static class DateComparator implements Comparator<CrimeDescription> {
+        @Override
+        public int compare(CrimeDescription o1, CrimeDescription o2) {
+            DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                return dateFormat.parse(o1.getDate_()).compareTo(dateFormat.parse(o2.getDate_()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
     }
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -135,6 +136,7 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         layout.setFocusable(false);
         layout.setClickable(false);
         layout.setNumColumns(images.size());
+        Log.d(TAG, String.format("width "+ layout.getColumnWidth()));
         layout.setAdapter(new ImageAdapter(getContext(), images));
 
 //        String listOfTrains=getContext().getString(R.string.trains, builder.toString());
