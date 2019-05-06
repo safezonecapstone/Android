@@ -213,24 +213,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // change the state of the bottom sheet
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "Clicked and entering");
-                Intent myintent = new Intent(MapActivity.this, StatsActivity.class);
-
-                double longitude;
-                double latitude;
-                longitude=subwayData.get(position).getLongitude();
-                latitude=subwayData.get(position).getLatitude();
-                myintent.putExtra("Latitude", latitude);
-                myintent.putExtra("Longitude", longitude);
-                myintent.putExtra("Station Name", subwayData.get(position).getName());
-
-                startActivity(myintent);
-            }
-        });
-
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {

@@ -14,6 +14,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +55,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
     //widgets
     private ImageView mGPS;
-
-
 
     //vars
     private boolean mLocationPermissionGranted = false;
@@ -157,6 +157,21 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
         // change the state of the bottom sheet
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "Clicked and entering");
+                Intent myintent = new Intent(RouteMap.this, InstructionsActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Instruction",(Serializable) routesData.get(position).getInstructions());
+                myintent.putExtra("BUNDLE", bundle);
+                myintent.putExtra("Source", routesData.get(position).getStartingAddress());
+                myintent.putExtra("Destination", routesData.get(position).getEndingAddress());
+                startActivity(myintent);
+            }
+        });
 
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
