@@ -34,6 +34,7 @@ import java.util.HashMap;
 import androidx.appcompat.app.AppCompatActivity;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
+import de.codecrafters.tableview.model.TableColumnModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class StatsActivity extends AppCompatActivity {
@@ -148,6 +149,7 @@ public class StatsActivity extends AppCompatActivity {
         StatsTableAdapter statsTableAdapter=new StatsTableAdapter(this, cat);
         crimeStationInformationSortableTableView.setDataAdapter(statsTableAdapter);
         crimeStationInformationSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
+        //TableColumnModel
 
         crimeStationInformationSortableTableView.setColumnComparator(1, new FreuencyComparator());
         crimeStationInformationSortableTableView.addDataClickListener(new TableDataClickListener<CrimeStationInformation>() {

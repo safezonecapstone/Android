@@ -16,34 +16,14 @@
         android:textColor="#000"
         android:textSize="30dp" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/Name"-->
-        <!--android:layout_width="140dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="51dp"-->
-        <!--android:background="#FFF"-->
-        <!--android:text="Categroy"-->
-        <!--android:textColor="#000"-->
-        <!--android:textSize="30dp" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/Frequency"-->
-        <!--android:layout_width="150dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="51dp"-->
-        <!--android:background="#FFF"-->
-        <!--android:layout_marginLeft="251dp"-->
-        <!--android:text="Frequency"-->
-        <!--android:textColor="#000"-->
-        <!--android:textSize="30dp" />-->
-
     <de.codecrafters.tableview.SortableTableView
         xmlns:table="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/Address"
-        table:tableView_columnCount="2" />
+        table:tableView_columnCount="2"
+        android:gravity="center"/>
 
 
     <!--<ExpandableListView-->
