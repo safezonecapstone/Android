@@ -212,6 +212,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // change the state of the bottom sheet
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        sheetBehavior.setPeekHeight(210);
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
