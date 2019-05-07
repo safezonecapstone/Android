@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +57,10 @@ public class MainActivity extends Activity {
     private EditText mDestinationAddress;
     private Button mNearby;
     private Button mRoutes;
+    private ImageView mHelp;
+    private TextView mSearchFieldHelp;
+    private TextView mNearbyButtonHelp;
+    private TextView mRoutesButtonHelp;
 
     //vars
     private double mLat;
@@ -64,6 +70,7 @@ public class MainActivity extends Activity {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mCurrentLocation;
     private boolean mLocationPermissionGranted = false;
+    private boolean mClicked = false;
 
 
     @Override
@@ -75,6 +82,10 @@ public class MainActivity extends Activity {
         mDestinationAddress = (EditText) findViewById(R.id.input_search_main2);
         mNearby = (Button) findViewById(R.id.buttonNearby);
         mRoutes = (Button) findViewById(R.id.buttonRoutes);
+        mHelp = (ImageView) findViewById(R.id.ic_help);
+        mSearchFieldHelp = (TextView) findViewById(R.id.textview_help_edittext);
+        mNearbyButtonHelp = (TextView) findViewById(R.id.textview_help_button_nearby);
+        mRoutesButtonHelp = (TextView) findViewById(R.id.textview_help_button_routes);
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -92,7 +103,6 @@ public class MainActivity extends Activity {
                     mLat = location.getLatitude();
                     mLng = location.getLongitude();
                     Log.d(TAG, "onLocationChanged: mLat mLng" + mLat + " " + mLng);
-
                 }
             }
 
@@ -188,6 +198,7 @@ public class MainActivity extends Activity {
                 getCurrentLocation(true);
             }
         });
+
         mRoutes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,6 +207,24 @@ public class MainActivity extends Activity {
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Destination cannot be empty", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        mHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mClicked) {
+                    mSearchFieldHelp.setVisibility(View.VISIBLE);
+                    mNearbyButtonHelp.setVisibility(View.VISIBLE);
+                    mRoutesButtonHelp.setVisibility(View.VISIBLE);
+                    mClicked = true;
+                }
+                else if (mClicked) {
+                    mSearchFieldHelp.setVisibility(View.INVISIBLE);
+                    mNearbyButtonHelp.setVisibility(View.INVISIBLE);
+                    mRoutesButtonHelp.setVisibility(View.INVISIBLE);
+                    mClicked = false;
                 }
             }
         });

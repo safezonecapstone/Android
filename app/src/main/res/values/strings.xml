@@ -9,6 +9,10 @@
     <string name="button_routes">Routes</string>
     <string name="address_hint">Leave Blank for Current Location</string>
     <string name="destination_hint">Destination</string>
+    <string name="edittext_help">Search Fields should include city and state for correct location</string>
+    <string name="button_nearby_help">Brings up the map and lists nearby stations with
+        appropriate information</string>
+    <string name="button_routes_help">Brings up the map and lists routes</string>
 
     <string name="date_prompt">Choose Date</string>
 

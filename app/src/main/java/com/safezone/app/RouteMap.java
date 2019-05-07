@@ -31,6 +31,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -85,16 +87,12 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 Log.d(TAG, "address_null: " + mAddress);
                 getDeviceLocation();
                 Log.d(TAG, "onMapReady empty: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
-                if (!mDestinationAddress.isEmpty()){
-                    geoLocate(mDestinationAddress, true);
-                }
+                geoLocate(mDestinationAddress, true);
             }
             else {
                 Log.d(TAG, "address_not_null: " + mAddress);
                 geoLocate(mAddress, false);
-                if (!mDestinationAddress.isEmpty()){
-                    geoLocate(mDestinationAddress, true);
-                }
+                geoLocate(mDestinationAddress, true);
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -110,7 +108,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
         mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
 
         getLocationPermission();
         getAddress();
@@ -130,8 +127,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private void init() {
         Log.d(TAG, "init: initializing");
-
-        //getSubways(mCurrentLatitude, mCurrentLongitude);
 
         getRoutes(mCurrentLatitude, mCurrentLongitude, mDestinationLatitude, mDestinationLongitude);
         mGPS.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +152,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
         // change the state of the bottom sheet
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        sheetBehavior.setPeekHeight(175);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -230,7 +226,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 mDestinationLongitude = address.getLongitude();
 
                 Log.d(TAG, "geoLocate: found a location: " + address.toString());
-                //moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+                moveCameraRoute ();
             }
         }
     }
@@ -271,6 +267,21 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
             MarkerOptions options = new MarkerOptions().position(latLng).title(title);
             mMap.addMarker(options);
         }
+    }
+
+    private void moveCameraRoute () {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        LatLng current_loc = new LatLng(mCurrentLatitude, mCurrentLongitude);
+        LatLng destination_loc = new LatLng(mDestinationLatitude, mDestinationLongitude);
+        builder.include(current_loc);
+        builder.include(destination_loc);
+        LatLngBounds bounds = builder.build();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+
+        MarkerOptions current = new MarkerOptions().position(current_loc);
+        MarkerOptions destination = new MarkerOptions().position(destination_loc);
+        mMap.addMarker(current);
+        mMap.addMarker(destination);
     }
 
     private void initMap() {
