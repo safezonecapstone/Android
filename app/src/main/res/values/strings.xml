@@ -4,7 +4,8 @@
     <string name="safezone_api_key">4c4fdb68-49d7-11e9-8928-88e9fe70a0a1</string>
     <string name="location_name">Location: %1$s</string>
     <string name="trains">Train: %1$s</string>
-    <string name="percentile">Percentile: %1$s</string>
+    <string name="percentile">Safety Rating: %1$s</string>
+    <string name="duration">Duration: %1$s</string>
     <string name="button_nearby">Nearby</string>
     <string name="button_routes">Routes</string>
     <string name="address_hint">Leave Blank for Current Location</string>

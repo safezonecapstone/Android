@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -141,7 +142,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
     //Populate the view with routes
     private void populateListView() {
 
-        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.route_bottom_sheet);
+        LinearLayout linearLayout=(LinearLayout) findViewById(R.id.route_bottom_sheet);
 
         RoutesAdapter routesAdapter=new RoutesAdapter(this, routesData);
 
@@ -370,7 +371,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                                 String durationTime=duration.getString("text");
                                 Log.d(TAG, "Duration: " + durationTime);
 
-                                Routes routes=new Routes(startingPoint, endingPoint, durationTime, rating);
+                                Routes routes=new Routes(startingPoint, endingPoint, rating ,durationTime);
                                 routesData.add(routes);
 
                                 JSONArray steps=LEG.getJSONArray("steps");

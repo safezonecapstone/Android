@@ -35,6 +35,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.model.TableColumnModel;
+import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class StatsActivity extends AppCompatActivity {
@@ -147,6 +148,10 @@ public class StatsActivity extends AppCompatActivity {
         SortableTableView<CrimeStationInformation> crimeStationInformationSortableTableView=
                 (SortableTableView<CrimeStationInformation>)findViewById(R.id.tableView);
         StatsTableAdapter statsTableAdapter=new StatsTableAdapter(this, cat);
+        TableColumnWeightModel columnModel = new TableColumnWeightModel(2);
+        columnModel.setColumnWeight(0, 2);
+        columnModel.setColumnWeight(1, 1);
+        crimeStationInformationSortableTableView.setColumnModel(columnModel);
         crimeStationInformationSortableTableView.setDataAdapter(statsTableAdapter);
         crimeStationInformationSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
         //TableColumnModel

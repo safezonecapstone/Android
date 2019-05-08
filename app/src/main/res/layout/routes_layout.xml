@@ -4,32 +4,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/startingAddress"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_centerHorizontal="true" />
+    <!--<TextView-->
+        <!--android:id="@+id/startingAddress"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_centerHorizontal="true" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/endingAddress"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_below="@id/startingAddress"-->
+        <!--android:layout_centerHorizontal="true" />-->
 
     <TextView
-        android:id="@+id/endingAddress"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/startingAddress"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/duration"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/endingAddress"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/routeNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#000"
+        android:textSize="20dp"/>
 
     <TextView
         android:id="@+id/rating"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/duration"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_toEndOf="@+id/routeNumber"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#000"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/rating"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="50dp"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:textAlignment="center"/>
 
     <!--<ListView-->
         <!--android:id="@+id/instructions"-->
