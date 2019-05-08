@@ -46,7 +46,7 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         TextView place = convertView.findViewById(R.id.locationName);
 
 
-        String location_name=getContext().getString(R.string.location_name, location.getName());
+        String location_name=location.getName();
         // Populate the data into the template view using the data object
         place.setText(location_name);
 

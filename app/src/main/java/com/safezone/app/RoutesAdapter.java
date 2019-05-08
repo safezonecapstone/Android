@@ -34,25 +34,28 @@ public class RoutesAdapter extends ArrayAdapter<Routes> {
 
         Routes route = getItem(position);
 
-        TextView startAddress = (TextView) convertView.findViewById(R.id.startingAddress);
-        String start = route.getStartingAddress();
-        Log.d(TAG, start);
-        startAddress.setText(start);
+        TextView routepostion=(TextView)convertView.findViewById(R.id.routeNumber);
+        routepostion.setText(""+ (position+1) + ".");
 
-        TextView endingAddress = (TextView) convertView.findViewById(R.id.endingAddress);
-        String end = route.getEndingAddress();
-        endingAddress.setText(end);
+//        TextView startAddress = (TextView) convertView.findViewById(R.id.startingAddress);
+//        String start = route.getStartingAddress();
+//        Log.d(TAG, start);
+//        startAddress.setText(start);
+//
+//        TextView endingAddress = (TextView) convertView.findViewById(R.id.endingAddress);
+//        String end = route.getEndingAddress();
+//        endingAddress.setText(end);
 
-        Log.d(TAG, end);
+//        Log.d(TAG, end);
 
         TextView duration = (TextView) convertView.findViewById(R.id.duration);
-        String durationTime = route.getDuration();
+        String durationTime = getContext().getString(R.string.duration, route.getDuration());
         duration.setText(durationTime);
 
         Log.d(TAG, durationTime);
 
         TextView rating = (TextView) convertView.findViewById(R.id.rating);
-        String rate = route.getRating();
+        String rate=getContext().getString(R.string.percentile, route.getRating());
         rating.setText(rate);
 
         Log.d(TAG, rate);

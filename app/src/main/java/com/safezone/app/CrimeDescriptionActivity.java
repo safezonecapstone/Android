@@ -14,6 +14,7 @@ import java.util.Comparator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class CrimeDescriptionActivity extends AppCompatActivity {
@@ -55,6 +56,10 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         SortableTableView<CrimeDescription> crimeDescriptionSortableTableView=
                 (SortableTableView<CrimeDescription>)findViewById(R.id.tableViewCrimeDescription);
         CrimeDescriptionTableAdapter crimeDescriptionTableAdapter=new CrimeDescriptionTableAdapter(this, crimeDescriptions);
+        TableColumnWeightModel columnModel = new TableColumnWeightModel(2);
+        columnModel.setColumnWeight(0, 3);
+        columnModel.setColumnWeight(1, 1);
+        crimeDescriptionSortableTableView.setColumnModel(columnModel);
         crimeDescriptionSortableTableView.setDataAdapter(crimeDescriptionTableAdapter);
         crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
 

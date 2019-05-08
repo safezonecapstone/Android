@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -34,13 +35,15 @@ import java.util.HashMap;
 import androidx.appcompat.app.AppCompatActivity;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
+import de.codecrafters.tableview.model.TableColumnModel;
+import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 
 public class StatsActivity extends AppCompatActivity {
 
     private static final String TAG = "StatsActivity";
 
-    private Spinner spinner2;
+    private Spinner spinner;
     private String address;
     double mCurrentLatitude;
     double mCurrentLongitude;
@@ -56,7 +59,37 @@ public class StatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
 
         getAddress();
-        getCrimes();
+        spinner=(Spinner)findViewById(R.id.spinner1);
+        spinner.setSelection(5);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String filter=spinner.getSelectedItem().toString();
+                Log.d(TAG, "You selected: "+filter);
+                if(filter.equals("Last Week")){
+                    getCrimes("week");
+                }
+                else if(filter.equals("Last Month")){
+                    getCrimes("month");
+                }
+                else if(filter.equals("Last 3 Months")){
+                    getCrimes("3 month");
+                }
+                else if(filter.equals("Last 6 Months")){
+                    getCrimes("6 month");
+                }
+                else if(filter.equals("Last 9 Months")){
+                    getCrimes("9 month");
+                }
+                else if(filter.equals("Last 12 Months")){
+                    getCrimes("year");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     //Gets address of station user wants to view
@@ -72,7 +105,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     //get crimes associated with that station
-    private void getCrimes() {
+    private void getCrimes(String filter) {
         Log.d(TAG, "getCrimes: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
         Log.d(TAG, "getCrimes: entered");
         String api_key = getString(R.string.safezone_api_key);
@@ -80,6 +113,7 @@ public class StatsActivity extends AppCompatActivity {
                 new StringBuilder("https://api-dot-united-triode-233023.appspot.com/api/crimes/nearby?");
         crimes.append("latitude=").append(mCurrentLatitude);
         crimes.append("&longitude=").append(mCurrentLongitude);
+        crimes.append("&timeSpan=").append(filter);
         crimes.append("&API_KEY=" + api_key);
 
         String crimesURL = crimes.toString();
@@ -146,8 +180,13 @@ public class StatsActivity extends AppCompatActivity {
         SortableTableView<CrimeStationInformation> crimeStationInformationSortableTableView=
                 (SortableTableView<CrimeStationInformation>)findViewById(R.id.tableView);
         StatsTableAdapter statsTableAdapter=new StatsTableAdapter(this, cat);
+        TableColumnWeightModel columnModel = new TableColumnWeightModel(2);
+        columnModel.setColumnWeight(0, 2);
+        columnModel.setColumnWeight(1, 1);
+        crimeStationInformationSortableTableView.setColumnModel(columnModel);
         crimeStationInformationSortableTableView.setDataAdapter(statsTableAdapter);
         crimeStationInformationSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
+        //TableColumnModel
 
         crimeStationInformationSortableTableView.setColumnComparator(1, new FreuencyComparator());
         crimeStationInformationSortableTableView.addDataClickListener(new TableDataClickListener<CrimeStationInformation>() {
