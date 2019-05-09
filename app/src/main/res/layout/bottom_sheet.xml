@@ -5,7 +5,18 @@
     android:id="@+id/bottom_sheet"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <TextView
+        android:id="@+id/stationsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/stations"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:textAlignment="center"/>
 
     <ListView
         xmlns:tools="http://schemas.android.com/tools"
@@ -16,7 +27,7 @@
         android:focusable="true"
         android:descendantFocusability="blocksDescendants"
         android:divider="#000"
-        android:dividerHeight="2px"
+        android:dividerHeight="1dp"
         android:background="@drawable/white_border"/>
 
 </LinearLayout>

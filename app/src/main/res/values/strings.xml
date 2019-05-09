@@ -14,6 +14,8 @@
     <string name="button_nearby_help">Brings up the map and lists nearby stations with
         appropriate information</string>
     <string name="button_routes_help">Brings up the map and lists routes</string>
+    <string name="stations">Stations</string>
+    <string name="routes">Routes</string>
 
     <string name="date_prompt">Choose Date</string>
 
