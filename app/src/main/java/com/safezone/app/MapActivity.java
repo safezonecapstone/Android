@@ -297,6 +297,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
         }
+        else {
+            Log.d(TAG, "geoLocate: location not found");
+            Toast.makeText(MapActivity.this, "Location could not be found. Provide more information", Toast.LENGTH_LONG).show();
+            Intent go_back = new Intent(MapActivity.this, MainActivity.class);
+            startActivity(go_back);
+        }
     }
 
     private void getDeviceLocation() {

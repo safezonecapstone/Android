@@ -217,6 +217,12 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 moveCameraRoute ();
             }
         }
+        else {
+            Log.d(TAG, "geoLocate: location not found");
+            Toast.makeText(RouteMap.this, "Invalid location, please use a valid address", Toast.LENGTH_LONG).show();
+            Intent go_back = new Intent(RouteMap.this, MainActivity.class);
+            startActivity(go_back);
+        }
     }
 
     private void getDeviceLocation() {
