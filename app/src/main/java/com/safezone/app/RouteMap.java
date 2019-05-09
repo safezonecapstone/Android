@@ -261,9 +261,9 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         LatLngBounds bounds = builder.build();
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
 
-        MarkerOptions current = new MarkerOptions().position(current_loc);
+        MarkerOptions current = new MarkerOptions().position(current_loc).title("Current Location");
         MarkerOptions destination = new MarkerOptions().position(destination_loc);
-        mMap.addMarker(current);
+        mMap.addMarker(current).showInfoWindow();
         mMap.addMarker(destination);
     }
 
