@@ -14,9 +14,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +54,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-    private static final float DEFAULT_ZOOM = 15f;
-
-    //widgets
-    private ImageView mGPS;
-
-
 
     //vars
     private boolean mLocationPermissionGranted = false;
@@ -85,16 +84,12 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 Log.d(TAG, "address_null: " + mAddress);
                 getDeviceLocation();
                 Log.d(TAG, "onMapReady empty: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
-                if (!mDestinationAddress.isEmpty()){
-                    geoLocate(mDestinationAddress, true);
-                }
+                geoLocate(mDestinationAddress, true);
             }
             else {
                 Log.d(TAG, "address_not_null: " + mAddress);
                 geoLocate(mAddress, false);
-                if (!mDestinationAddress.isEmpty()){
-                    geoLocate(mDestinationAddress, true);
-                }
+                geoLocate(mDestinationAddress, true);
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -108,9 +103,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_map);
 
-        mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
 
         getLocationPermission();
         getAddress();
@@ -131,22 +124,13 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
     private void init() {
         Log.d(TAG, "init: initializing");
 
-        //getSubways(mCurrentLatitude, mCurrentLongitude);
-
         getRoutes(mCurrentLatitude, mCurrentLongitude, mDestinationLatitude, mDestinationLongitude);
-        mGPS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked GPS icon");
-                getDeviceLocation();
-            }
-        });
     }
 
     //Populate the view with routes
     private void populateListView() {
 
-        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.route_bottom_sheet);
+        LinearLayout linearLayout=(LinearLayout) findViewById(R.id.route_bottom_sheet);
 
         RoutesAdapter routesAdapter=new RoutesAdapter(this, routesData);
 
@@ -157,6 +141,22 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
         // change the state of the bottom sheet
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        sheetBehavior.setPeekHeight(175);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "Clicked and entering");
+                Intent myintent = new Intent(RouteMap.this, InstructionsActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Instruction",(Serializable) routesData.get(position).getInstructions());
+                myintent.putExtra("BUNDLE", bundle);
+                myintent.putExtra("Source", routesData.get(position).getStartingAddress());
+                myintent.putExtra("Destination", routesData.get(position).getEndingAddress());
+                startActivity(myintent);
+            }
+        });
 
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -206,7 +206,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 mCurrentLongitude = address.getLongitude();
 
                 Log.d(TAG, "geoLocate: found a location: " + address.toString());
-                moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
             }
             else {
                 Address address = list.get(0);
@@ -215,8 +214,14 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 mDestinationLongitude = address.getLongitude();
 
                 Log.d(TAG, "geoLocate: found a location: " + address.toString());
-                //moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+                moveCameraRoute ();
             }
+        }
+        else {
+            Log.d(TAG, "geoLocate: location not found");
+            Toast.makeText(RouteMap.this, "Invalid location, please use a valid address", Toast.LENGTH_LONG).show();
+            Intent go_back = new Intent(RouteMap.this, MainActivity.class);
+            startActivity(go_back);
         }
     }
 
@@ -233,7 +238,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                             Log.d(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
                             Log.d(TAG, "onComplete:location: " + currentLocation.getLatitude() + currentLocation.getLongitude());
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         }
                         else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -248,14 +252,19 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom, String title) {
-        Log.d(TAG, "moveCamera: moving camera to: late: " + latLng.latitude + ", lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    private void moveCameraRoute () {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        LatLng current_loc = new LatLng(mCurrentLatitude, mCurrentLongitude);
+        LatLng destination_loc = new LatLng(mDestinationLatitude, mDestinationLongitude);
+        builder.include(current_loc);
+        builder.include(destination_loc);
+        LatLngBounds bounds = builder.build();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
 
-        if(!title.equals("My Location")) {
-            MarkerOptions options = new MarkerOptions().position(latLng).title(title);
-            mMap.addMarker(options);
-        }
+        MarkerOptions current = new MarkerOptions().position(current_loc);
+        MarkerOptions destination = new MarkerOptions().position(destination_loc);
+        mMap.addMarker(current);
+        mMap.addMarker(destination);
     }
 
     private void initMap() {
@@ -344,7 +353,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                                 String durationTime=duration.getString("text");
                                 Log.d(TAG, "Duration: " + durationTime);
 
-                                Routes routes=new Routes(startingPoint, endingPoint, durationTime, rating);
+                                Routes routes=new Routes(startingPoint, endingPoint, rating ,durationTime);
                                 routesData.add(routes);
 
                                 JSONArray steps=LEG.getJSONArray("steps");

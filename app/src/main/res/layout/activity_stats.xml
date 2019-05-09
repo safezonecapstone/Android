@@ -10,32 +10,11 @@
     <TextView
         android:id="@+id/Address"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="1px"
         android:background="#FFF"
         android:textColor="#000"
-        android:textSize="30dp" />
-
-    <!--<TextView-->
-        <!--android:id="@+id/Name"-->
-        <!--android:layout_width="140dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="51dp"-->
-        <!--android:background="#FFF"-->
-        <!--android:text="Categroy"-->
-        <!--android:textColor="#000"-->
-        <!--android:textSize="30dp" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/Frequency"-->
-        <!--android:layout_width="150dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="51dp"-->
-        <!--android:background="#FFF"-->
-        <!--android:layout_marginLeft="251dp"-->
-        <!--android:text="Frequency"-->
-        <!--android:textColor="#000"-->
-        <!--android:textSize="30dp" />-->
+        android:textSize="25sp" />
 
     <de.codecrafters.tableview.SortableTableView
         xmlns:table="http://schemas.android.com/apk/res-auto"
@@ -75,15 +54,14 @@
         <!--android:paddingBottom="3px"-->
         <!--android:textSize="30dp"-->
         <!--android:text="Date" />-->
-    <!--<Spinner-->
-        <!--android:id="@+id/spinner1"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:paddingLeft="280dp"-->
-        <!--android:entries="@array/country_arrays"-->
-        <!--android:prompt="@string/date_prompt"-->
-        <!--tools:ignore="MissingConstraints"-->
-        <!--android:textSize="30dp"/>-->
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:entries="@array/Filter"
+        tools:ignore="MissingConstraints"
+        android:textSize="25sp"/>
 
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->

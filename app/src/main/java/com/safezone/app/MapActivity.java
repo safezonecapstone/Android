@@ -208,10 +208,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final ListView listView = (ListView) findViewById(R.id.list_item);
         listView.setAdapter(adapter);
 
-        final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
-
-        // change the state of the bottom sheet
-        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -230,6 +226,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivity(myintent);
             }
         });
+
+
+
+        final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
+
+        // change the state of the bottom sheet
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        sheetBehavior.setPeekHeight(210);
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -292,6 +296,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+        }
+        else {
+            Log.d(TAG, "geoLocate: location not found");
+            Toast.makeText(MapActivity.this, "Location could not be found. Provide more information", Toast.LENGTH_LONG).show();
+            Intent go_back = new Intent(MapActivity.this, MainActivity.class);
+            startActivity(go_back);
         }
     }
 

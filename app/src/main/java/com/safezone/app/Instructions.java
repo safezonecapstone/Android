@@ -1,6 +1,8 @@
 package com.safezone.app;
 
-public class Instructions {
+import java.io.Serializable;
+
+public class Instructions implements Serializable {
 
     String transit_Mode;
     String instruction;
