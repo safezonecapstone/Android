@@ -49,7 +49,8 @@
             android:hint="@string/address_hint"
             android:imeOptions="actionSearch"
             android:singleLine="true"
-            android:inputType="textPostalAddress" />
+            android:inputType="textPostalAddress"
+            android:maxLength="100"/>
 
     </RelativeLayout>
 
@@ -85,7 +86,8 @@
             android:singleLine="true"
             android:textColor="#000"
             android:textSize="15sp"
-            android:inputType="textPostalAddress"/>
+            android:inputType="textPostalAddress"
+            android:maxLength="100"/>
 
     </RelativeLayout>
 

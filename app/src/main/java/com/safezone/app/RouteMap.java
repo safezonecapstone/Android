@@ -54,10 +54,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-    private static final float DEFAULT_ZOOM = 15f;
-
-    //widgets
-    private ImageView mGPS;
 
     //vars
     private boolean mLocationPermissionGranted = false;
@@ -107,7 +103,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_map);
 
-        mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         getLocationPermission();
@@ -130,13 +125,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         Log.d(TAG, "init: initializing");
 
         getRoutes(mCurrentLatitude, mCurrentLongitude, mDestinationLatitude, mDestinationLongitude);
-        mGPS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked GPS icon");
-                getDeviceLocation();
-            }
-        });
     }
 
     //Populate the view with routes
@@ -218,7 +206,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 mCurrentLongitude = address.getLongitude();
 
                 Log.d(TAG, "geoLocate: found a location: " + address.toString());
-                moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
             }
             else {
                 Address address = list.get(0);
@@ -245,7 +232,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                             Log.d(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
                             Log.d(TAG, "onComplete:location: " + currentLocation.getLatitude() + currentLocation.getLongitude());
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         }
                         else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -257,16 +243,6 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         }
         catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
-    }
-
-    private void moveCamera(LatLng latLng, float zoom, String title) {
-        Log.d(TAG, "moveCamera: moving camera to: late: " + latLng.latitude + ", lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        if(!title.equals("My Location")) {
-            MarkerOptions options = new MarkerOptions().position(latLng).title(title);
-            mMap.addMarker(options);
         }
     }
 
