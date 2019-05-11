@@ -7,12 +7,19 @@
     <TextView
         android:id="@+id/source"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"/>
     <TextView
         android:id="@+id/destination"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/source"/>
+        android:layout_below="@id/source"
+        android:textSize="16sp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"/>
 
     <ListView
         android:id="@+id/listInstruction"
