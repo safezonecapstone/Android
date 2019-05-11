@@ -8,7 +8,7 @@ public class Routes {
     private String endingAddress;
     private String rating;
     private String duration;
-    private ArrayList<Instructions> instructions=new ArrayList<>();
+    private ArrayList<Object> instructions=new ArrayList<>();
     //private ArrayList<String> subways=new ArrayList<>();
 
     Routes(String start, String end, String rate, String time){
@@ -34,12 +34,11 @@ public class Routes {
         return startingAddress;
     }
 
-    public void addInstructions(Instructions instruct){
+    public void addInstructions(Object instruct){
        instructions.add(instruct);
     }
 
-
-    public ArrayList<Instructions> getInstructions() {
+    public ArrayList<Object> getInstructions() {
         return instructions;
     }
 

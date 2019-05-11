@@ -64,9 +64,6 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
 
         crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator());
-//        CrimeDescriptionAdapter adapter=new CrimeDescriptionAdapter(this, crimeDescriptions);
-//        ListView listView = (ListView) findViewById(R.id.crime);
-//        listView.setAdapter(adapter);
     }
 
     private static class DateComparator implements Comparator<CrimeDescription> {

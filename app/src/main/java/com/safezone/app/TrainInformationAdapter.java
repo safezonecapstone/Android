@@ -42,12 +42,9 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
 
         final TrainInformation location = getItem(position);
 
-        // Lookup view for data population
+        //Gets the location name for each train station
         TextView place = convertView.findViewById(R.id.locationName);
-
-
         String location_name=location.getName();
-        // Populate the data into the template view using the data object
         place.setText(location_name);
 
         //TextView trains = convertView.findViewById(R.id.trains);
@@ -60,7 +57,6 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
 
         for(int i=0; i<location.getTrainStop().size(); i++) {
             Log.d(TAG, trainstops.get(i));
-            //builder.append(location.getTrainStop().get(i)+ " ");
             if(trainstops.get(i).equals("A")){
                 images.add(R.drawable.ic_nycs_bull_trans_a);
             }
@@ -127,6 +123,9 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
             else if(trainstops.get(i).equals("6")){
                 images.add(R.drawable.ic_nycs_bull_trans_6);
             }
+            else if( trainstops.get(i).equals("6X")) {
+                images.add(R.drawable.ic_nycs_bull_trans_6d);
+            }
             else if(trainstops.get(i).equals("7")){
                 images.add(R.drawable.ic_nycs_bull_trans_7);
             }
@@ -139,56 +138,10 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         Log.d(TAG, String.format("width "+ layout.getColumnWidth()));
         layout.setAdapter(new ImageAdapter(getContext(), images));
 
-//        String listOfTrains=getContext().getString(R.string.trains, builder.toString());
-//
-//        //Log.d(TAG, listOfTrains);
-//
-//
-////        ImageView imageView=(ImageView)convertView.findViewById(R.id.trains);
-////        imageView.setImageResource(R.drawable.ic_nycs_bull_trans_6);
-//
-//
-//        for(int i=0; i<listOfTrains.length(); i++) {
-//        }
-
-//        RecyclerView recyclerView=(RecyclerView)convertView.findViewById(R.id.trains);
-//        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-//        recyclerView.setLayoutManager(layoutManager);
-
-
-
-
-
-//        gridview.setAdapter(imageAdapter);
-        //trains.setText(listOfTrains);
-
-
+        //Gets percentile for each train station
         TextView percentile = convertView.findViewById(R.id.percentile);
-
         String percent=getContext().getString(R.string.percentile, location.getPercentile());
-
-
-
-        // Populate the data into the template view using the data object
         percentile.setText(percent);
-
-//        Button viewCrimeButton= (Button) convertView.findViewById(R.id.viewCrimes);
-//        viewCrimeButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                Intent myintent = new Intent(acitivity, StatsActivity.class);
-//
-//                double longitude;
-//                double latitude;
-//                longitude=location.getLongitude();
-//                latitude=location.getLatitude();
-//                myintent.putExtra("Latitude", latitude);
-//                myintent.putExtra("Longitude", longitude);
-//                myintent.putExtra("Station Name", location.getName());
-//
-//                acitivity.startActivity(myintent);
-//            }
-//        });
 
         // Return the completed view to render on screen
         return convertView;

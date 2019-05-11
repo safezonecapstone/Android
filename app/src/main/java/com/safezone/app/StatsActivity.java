@@ -186,7 +186,6 @@ public class StatsActivity extends AppCompatActivity {
         crimeStationInformationSortableTableView.setColumnModel(columnModel);
         crimeStationInformationSortableTableView.setDataAdapter(statsTableAdapter);
         crimeStationInformationSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
-        //TableColumnModel
 
         crimeStationInformationSortableTableView.setColumnComparator(1, new FreuencyComparator());
         crimeStationInformationSortableTableView.addDataClickListener(new TableDataClickListener<CrimeStationInformation>() {
@@ -201,25 +200,6 @@ public class StatsActivity extends AppCompatActivity {
 
             }
         });
-
-//        CrimeStationInformationAdapter adapter=new CrimeStationInformationAdapter(this, cat);
-//
-//        ListView listView = (ListView) findViewById(R.id.crime_item);
-//
-//        listView.setAdapter(adapter);
-//
-//        //Pass crime description to next activity so user can view each specific crime
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-//                Intent myintent = new Intent(StatsActivity.this, CrimeDescriptionActivity.class);
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("Crime Description",(Serializable) cat.get(position).getC_description());
-//                myintent.putExtra("BUNDLE", bundle);
-//                startActivity(myintent);
-//            }
-//        });
     }
 
     private static class FreuencyComparator implements Comparator<CrimeStationInformation> {

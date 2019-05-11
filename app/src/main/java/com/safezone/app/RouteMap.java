@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -312,7 +313,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
     private void getRoutes (double origin_latitude, double origin_longitude,
                             double dest_latitude, double dest_longitude) {
         String api_key = getString(R.string.safezone_api_key);
-        StringBuilder routes =
+        final StringBuilder routes =
                 new StringBuilder("https://api-dot-united-triode-233023.appspot.com/api/route?");
         routes.append("origin_latitude=").append(origin_latitude);
         routes.append("&origin_longitude=").append(origin_longitude);
@@ -363,15 +364,47 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
 
                                     if(eachSteps.getString("travel_mode").equals("WALKING")) {
                                         String instructions=eachSteps.getString("html_instructions");
+//                                        JSONObject end_location=eachSteps.getJSONObject("end_location");
+//                                        JSONObject start_location=eachSteps.getJSONObject("start_location");
+//                                        Double startingLat=Double.parseDouble(start_location.getString("lat"));
+//                                        Double startingLong=Double.parseDouble(start_location.getString("lng"));
+//                                        Double endLat=Double.parseDouble(end_location.getString("lat"));
+//                                        Double endLong=Double.parseDouble(end_location.getString("lng"));
                                         Instructions instructions1=new Instructions("WALKING", instructions);
                                         routesData.get(i).addInstructions(instructions1);
-
+//                                        JSONArray stepsForWalking=eachSteps.getJSONArray("steps");
+//                                        for(int k=0; k<steps.length(); k++) {
+//                                            JSONObject walkingSteps = (JSONObject) steps.get(k);
+//
+//                                            if (eachSteps.getString("travel_mode").equals("WALKING")) {
+//                                                String instructions2 = walkingSteps.getString("html_instructions");
+//                                                JSONObject end_location1 = walkingSteps.getJSONObject("end_location");
+//                                                JSONObject start_location1 = walkingSteps.getJSONObject("start_location");
+//                                                Double startingLat1 = Double.parseDouble(start_location1.getString("lat"));
+//                                                Double startingLong1 = Double.parseDouble(start_location1.getString("lng"));
+//                                                Double endLat1 = Double.parseDouble(end_location1.getString("lat"));
+//                                                Double endLong1 = Double.parseDouble(end_location1.getString("lng"));
+//                                                Instructions instructions3 = new Instructions("WALKING", instructions2, startingLat1, startingLong1, endLat1, endLong1);
+//                                                routesData.get(i).addInstructions(instructions3);
+//                                            }
+//                                        }
                                     }
                                     else if(eachSteps.getString("travel_mode").equals("TRANSIT")) {
                                         JSONObject transit=eachSteps.getJSONObject("transit_details");
+                                        String instructions=eachSteps.getString("html_instructions");
                                         JSONObject subwayLine=transit.getJSONObject("line");
+                                        JSONObject arrivalStop=transit.getJSONObject("arrival_stop");
+                                        String stopName=arrivalStop.getString("name");
                                         String lineName=subwayLine.getString("short_name");
-                                        Instructions instructions1=new Instructions("TRANSIT", lineName);
+//                                        JSONObject end_location=eachSteps.getJSONObject("end_location");
+//                                        JSONObject start_location=eachSteps.getJSONObject("start_location");
+//                                        Double startingLat=Double.parseDouble(start_location.getString("lat"));
+//                                        Double startingLong=Double.parseDouble(start_location.getString("lng"));
+//                                        Double endLat=Double.parseDouble(end_location.getString("lat"));
+//                                        Double endLong=Double.parseDouble(end_location.getString("lng"));
+                                        Instructions instructions1=new Instructions("TRANSIT", instructions);
+                                        instructions1.setSubway(lineName);
+                                        instructions1.setDestinationStop(stopName);
                                         routesData.get(i).addInstructions(instructions1);
                                     }
                                 }

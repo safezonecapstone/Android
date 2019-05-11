@@ -16,6 +16,7 @@
     <string name="button_routes_help">Brings up the map and lists routes</string>
     <string name="stations">Stations</string>
     <string name="routes">Routes</string>
+    <string name="destination_stop">Stop at: %1$s</string>
 
     <string name="date_prompt">Choose Date</string>
 

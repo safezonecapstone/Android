@@ -12,68 +12,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1px"
+        android:layout_alignBottom="@+id/spinner1"
+        android:layout_alignTop="@+id/spinner1"
         android:background="#FFF"
         android:textColor="#000"
-        android:textSize="25sp" />
+        android:gravity="center_vertical"
+        android:textSize="20sp" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        style="@android:style/Widget.Spinner.DropDown"
+        android:entries="@array/Filter"
+        tools:ignore="MissingConstraints" />
 
     <de.codecrafters.tableview.SortableTableView
         xmlns:table="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/Address"
+        android:layout_below="@+id/spinner1"
         table:tableView_columnCount="2" />
-
-
-    <!--<ExpandableListView-->
-        <!--android:id="@+id/lvExp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_marginTop="51dp"/>-->
-    <!--<ListView-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:tools="http://schemas.android.com/tools"-->
-        <!--android:id="@+id/crime_item"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginTop="102dp"-->
-        <!--tools:context=".StatsActivity">-->
-    <!--</ListView>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/Date"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="#FFF"-->
-        <!--android:textColor="#000"-->
-        <!--android:layout_marginBottom="1px"-->
-        <!--android:layout_marginLeft="290dp"-->
-        <!--android:paddingLeft="10px"-->
-        <!--android:paddingTop="10px"-->
-        <!--android:paddingRight="20px"-->
-        <!--android:paddingBottom="3px"-->
-        <!--android:textSize="30dp"-->
-        <!--android:text="Date" />-->
-    <Spinner
-        android:id="@+id/spinner1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:entries="@array/Filter"
-        tools:ignore="MissingConstraints"
-        android:textSize="25sp"/>
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginTop="50dp">-->
-        <!--<TableLayout-->
-            <!--android:id="@+id/tablelayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:shrinkColumns="0" >-->
-        <!--</TableLayout>-->
-    <!--</LinearLayout>-->
-
 
 </RelativeLayout>

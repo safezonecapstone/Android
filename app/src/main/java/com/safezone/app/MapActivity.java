@@ -59,8 +59,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //widgets
     private ImageView mGPS;
 
-
-
     //vars
     private boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
@@ -215,10 +213,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.d(TAG, "Clicked and entering");
                 Intent myintent = new Intent(MapActivity.this, StatsActivity.class);
 
-                double longitude;
-                double latitude;
-                longitude=subwayData.get(position).getLongitude();
-                latitude=subwayData.get(position).getLatitude();
+                double longitude=subwayData.get(position).getLongitude();
+                double latitude=subwayData.get(position).getLatitude();
                 myintent.putExtra("Latitude", latitude);
                 myintent.putExtra("Longitude", longitude);
                 myintent.putExtra("Station Name", subwayData.get(position).getName());
@@ -226,8 +222,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivity(myintent);
             }
         });
-
-
 
         final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(linearLayout);
 
@@ -238,10 +232,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                if (i==BottomSheetBehavior.STATE_EXPANDED){
-                    Log.d(TAG, "Expanded");
-                }
-                else if (i==BottomSheetBehavior.STATE_DRAGGING){
+                if (i==BottomSheetBehavior.STATE_DRAGGING){
                     if(listIsAtTop(listView)){
                         Log.d(TAG, "Dragging");
                         sheetBehavior.setState(BottomSheetBehavior.STATE_DRAGGING);
@@ -250,18 +241,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         Log.d(TAG, "Expanded");
                         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
-
                 }
-                else if (i==BottomSheetBehavior.STATE_COLLAPSED){
-                    Log.d(TAG, "Collapse");
-                }
-                else if (i==BottomSheetBehavior.STATE_HALF_EXPANDED){
-                    Log.d(TAG, "Half Expanded");
-                }
-                else if (i==BottomSheetBehavior.STATE_SETTLING){
-                    Log.d(TAG, "Settling");
-                }
-
             }
             @Override
             public void onSlide(@NonNull View view, float v) {
@@ -269,6 +249,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    //Checks if the listview is at the top
     private boolean listIsAtTop(ListView listView)   {
         if(listView.getChildCount() == 0) return true;
         return listView.getChildAt(0).getTop() == 0;
@@ -384,5 +365,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
 }
