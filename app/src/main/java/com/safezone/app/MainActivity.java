@@ -37,10 +37,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
     private TextView mSearchFieldHelp;
     private TextView mNearbyButtonHelp;
     private TextView mRoutesButtonHelp;
+    private TextView mTradeMark;
 
     //vars
     private double mLat;
@@ -83,6 +85,7 @@ public class MainActivity extends Activity {
         mSearchFieldHelp = (TextView) findViewById(R.id.textview_help_edittext);
         mNearbyButtonHelp = (TextView) findViewById(R.id.textview_help_button_nearby);
         mRoutesButtonHelp = (TextView) findViewById(R.id.textview_help_button_routes);
+        mTradeMark = (TextView) findViewById(R.id.trade_mark);
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -215,12 +218,14 @@ public class MainActivity extends Activity {
                     mSearchFieldHelp.setVisibility(View.VISIBLE);
                     mNearbyButtonHelp.setVisibility(View.VISIBLE);
                     mRoutesButtonHelp.setVisibility(View.VISIBLE);
+                    mTradeMark.setVisibility(View.VISIBLE);
                     mClicked = true;
                 }
                 else if (mClicked) {
                     mSearchFieldHelp.setVisibility(View.INVISIBLE);
                     mNearbyButtonHelp.setVisibility(View.INVISIBLE);
                     mRoutesButtonHelp.setVisibility(View.INVISIBLE);
+                    mTradeMark.setVisibility(View.INVISIBLE);
                     mClicked = false;
                 }
             }

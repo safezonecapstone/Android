@@ -17,6 +17,7 @@
     <string name="stations">Stations</string>
     <string name="routes">Routes</string>
     <string name="destination_stop">Stop at: %1$s</string>
+    <string name="trade_mark">MTA&#8482;</string>
 
     <string name="date_prompt">Choose Date</string>
 
