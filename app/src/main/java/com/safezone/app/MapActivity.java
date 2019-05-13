@@ -1,3 +1,4 @@
+//**************Alex Bortoc and Yi Tong where mentioned**************
 package com.safezone.app;
 
 import android.Manifest;
@@ -8,7 +9,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,10 +38,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MotionEventCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +48,6 @@ import org.json.JSONObject;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapActivity";
-
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final float DEFAULT_ZOOM = 15f;
@@ -81,6 +77,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return;
             }
 
+            //Based on whether or not the user left address field empty, to get current location or
+            //search for a specific location, will either call getDeviceLocation or geoLocate respectively
             if (mAddress.isEmpty()) {
                 Log.d(TAG, "address_null: " + mAddress);
                 getDeviceLocation();
@@ -105,12 +103,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGPS = (ImageView) findViewById(R.id.ic_gps);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
         getLocationPermission();
         getAddress();
     }
 
-    //Get address being passed from one previous activity to another (intent)
+    //Started from onCreate, retrieves strings passed from MainActivity and sets global variables
     private void getAddress() {
         Intent intent = getIntent();
         if (intent.hasExtra("Address")) {
@@ -125,6 +122,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         getSubways(mCurrentLatitude, mCurrentLongitude);
 
+        //If user clicks on GPS icon, calls getDeviceLocation function that will move camera to users
+        //location
         mGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +133,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    //Api Request (get nearby stations based of address, returns subway stations)
+    //Alex Bortoc + Yi Tong
+    //Called from init function with the argument values set either by geolocating or by getAddress.
+    //Retrieves subway information by making an API call to the API server via URL
     private void getSubways(double latitude, double longitude) {
         Log.d(TAG, "getSubways: lat long " + mCurrentLatitude + " " + mCurrentLongitude);
         Log.d(TAG, "getSubways: entered");
@@ -196,6 +197,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AppController.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
+    //Yi Tong
     //Populate the view with traininformation
     private void populateListView() {
 
@@ -249,12 +251,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    //Yi Tong
     //Checks if the listview is at the top
     private boolean listIsAtTop(ListView listView)   {
         if(listView.getChildCount() == 0) return true;
         return listView.getChildAt(0).getTop() == 0;
     }
 
+
+    //Called from onMapReady. Finds and sets location coordinates based on a string passed from MainActivity
     private void geoLocate() {
         Log.d(TAG, "geoLocate: geoLocating");
 
@@ -286,6 +291,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //Called from onMapReady or when the user clicks the gps icon. Finds user's current location and moves
+    //camera on the map to it.
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
@@ -314,6 +321,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //Called from geoLocate or getDeviceLocation. Moves map camera to the coordinates provided in the
+    //argument and puts a marker on that spot
     private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving camera to: late: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -324,12 +333,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //Map initialization
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
     }
 
+    //Location permissions
     private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permission");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};

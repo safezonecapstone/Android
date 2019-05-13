@@ -1,3 +1,4 @@
+//**************Alex Bortoc**************
 package com.safezone.app;
 
 import android.Manifest;
@@ -23,20 +24,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -44,7 +46,6 @@ import androidx.core.content.ContextCompat;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
@@ -130,14 +131,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Snackbar appears on the screen if the location is not enabled. Allows the user to click on text
+    //"Enable" to bring up a dialog to turn on location services.
     @SuppressLint("WrongConstant")
     private void showLocationBar() {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.main_activity), "Location disabled", Snackbar.LENGTH_LONG)
                 .setAction("Enable", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        displayLocationSettingsRequest(getApplicationContext());
+                        displayLocationSettingsRequest();
                     }
                 });
         snackbar.setActionTextColor(Color.WHITE);
@@ -150,10 +152,9 @@ public class MainActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void displayLocationSettingsRequest(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
+    //Called from showLocationBar() to bring up the location services dialog. Allows the user to turn
+    //on location services from within the app
+    private void displayLocationSettingsRequest() {
 
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -163,32 +164,56 @@ public class MainActivity extends AppCompatActivity {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         builder.setAlwaysShow(true);
 
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+        Task<LocationSettingsResponse> results = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+        results.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
             @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i(TAG, "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                }
+                catch (ApiException exception) {
+                    switch (exception.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            try {
+                                ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                resolvable.startResolutionForResult(MainActivity.this,
+                                        REQUEST_CHECK_SETTINGS);
+                            }
+                            catch (IntentSender.SendIntentException e) {
+                                //Error ignored
+                            }
+                            catch (ClassCastException e) {
+                                //Error ignored
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            //Can't fix location settings
+                            break;
+                    }
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+                        finish();
+                        startActivity(getIntent());
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
     }
 
     private void init() {
@@ -211,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Help button controls visibility of textviews with helpful information
         mHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,8 +258,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Buttons nearby and routes call this function and based on the boolean value provided in the
+    //argument will launch either startNearbySearch or startRoutesSearch. Function attempts to get
+    //current location and passes its lat and lng on to the functions mentioned above.
     private void getCurrentLocation(boolean nearby) {
-        if (nearby == true) {
+        if (nearby) {
             try {
                 if(mLocationPermissionGranted) {
                     Task<Location> task = mFusedLocationProviderClient.getLastLocation();
@@ -279,6 +308,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Called from getCurrentLocation to initiate the MapActivity. Passes address, lat and lng strings
+    //to MapActivity, which are necessary for API calls and geolocation
     private void startNearbySearch(double lat, double lng) {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         String address = mAddress.getText().toString();
@@ -288,8 +319,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //Called from getCurrentLocation to initiate the RouteActivity. Passes address, lat, lng, and
+    //destination strings to RouteActivity, which are necessary for API calls and geolocation
     private void startRoutesSearch(double lat, double lng) {
-        Intent intent = new Intent(MainActivity.this, RouteMap.class);
+        Intent intent = new Intent(MainActivity.this, RouteActivity.class);
         String address = mAddress.getText().toString();
         String destination_address = mDestinationAddress.getText().toString();
         intent.putExtra("Address", address);
@@ -299,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //Checks for google play services
     public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
 

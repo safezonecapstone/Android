@@ -1,3 +1,4 @@
+//**************Code taken from the internet to service Json actions**************
 package com.safezone.app;
 
 import org.json.JSONArray;

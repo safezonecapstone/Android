@@ -1,3 +1,4 @@
+//**************Alex Bortoc and Yi Tong where mentioned**************
 package com.safezone.app;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -33,9 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -49,10 +46,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
+public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "RouteMap";
-
+    private static final String TAG = "RouteActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
@@ -81,6 +77,9 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                 return;
             }
 
+            //Based on whether or not the user left address field empty, to get current location or
+            //search for a specific location, will either call getDeviceLocation or geoLocate respectively.
+            //Geolocates destination afterwards
             if (mAddress.isEmpty()) {
                 Log.d(TAG, "address_null: " + mAddress);
                 getDeviceLocation();
@@ -110,7 +109,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         getAddress();
     }
 
-    //Get address being passed from one previous activity to another (intent)
+    //Started from onCreate, retrieves strings passed from MainActivity and sets global variables
     private void getAddress() {
         Intent intent = getIntent();
         if (intent.hasExtra("Destination")) {
@@ -128,6 +127,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         getRoutes(mCurrentLatitude, mCurrentLongitude, mDestinationLatitude, mDestinationLongitude);
     }
 
+    //Yi Tong
     //Populate the view with routes
     private void populateListView() {
 
@@ -148,7 +148,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "Clicked and entering");
-                Intent myintent = new Intent(RouteMap.this, InstructionsActivity.class);
+                Intent myintent = new Intent(RouteActivity.this, InstructionsActivity.class);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Instruction",(Serializable) routesData.get(position).getInstructions());
@@ -180,17 +180,20 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         });
     }
 
+    //Yi Tong
     private boolean listIsAtTop(ListView listView)   {
         if(listView.getChildCount() == 0) return true;
         return listView.getChildAt(0).getTop() == 0;
     }
 
+    //Called from onMapReady. Finds and sets location coordinates based on a string passed from MainActivity.
+    //Calls moveCameraRoute to set camera view on the map
     private void geoLocate(String location, boolean destination) {
         Log.d(TAG, "geoLocate: geoLocating");
 
         String searchString = location;
 
-        Geocoder geocoder = new Geocoder(RouteMap.this);
+        Geocoder geocoder = new Geocoder(RouteActivity.this);
         List<Address> list = new ArrayList<>();
         try {
             list = geocoder.getFromLocationName(searchString, 1);
@@ -220,12 +223,12 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         }
         else {
             Log.d(TAG, "geoLocate: location not found");
-            Toast.makeText(RouteMap.this, "Invalid location, please use a valid address", Toast.LENGTH_LONG).show();
-            Intent go_back = new Intent(RouteMap.this, MainActivity.class);
+            Toast.makeText(RouteActivity.this, "Invalid location, please use a valid address", Toast.LENGTH_LONG).show();
+            Intent go_back = new Intent(RouteActivity.this, MainActivity.class);
             startActivity(go_back);
         }
     }
-
+    //Called from onMapReady. Finds user's current location
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
@@ -242,7 +245,7 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                         }
                         else {
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(RouteMap.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RouteActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -253,6 +256,8 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
+    //Called from geoLocate. Zoomes out map camera to accommodate both origin and destination
+    //coordinates and puts markers on the map
     private void moveCameraRoute () {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         LatLng current_loc = new LatLng(mCurrentLatitude, mCurrentLongitude);
@@ -268,12 +273,14 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         mMap.addMarker(destination);
     }
 
+    //Map initialization
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(RouteMap.this);
+        mapFragment.getMapAsync(RouteActivity.this);
     }
 
+    //Location permissions
     private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permission");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -310,6 +317,9 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
+    //Alex Bortoc + Yi Tong
+    //Called from init function with the argument values set either by geolocating or by getAddress(origin)
+    //and geolocating(destination).Retrieves routes information by making an API call to the API server via URL
     private void getRoutes (double origin_latitude, double origin_longitude,
                             double dest_latitude, double dest_longitude) {
         String api_key = getString(R.string.safezone_api_key);

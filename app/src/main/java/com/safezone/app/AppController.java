@@ -1,3 +1,4 @@
+//**************Code taken from the internet to service URL actions**************
 package com.safezone.app;
 
 import android.app.Application;
@@ -9,7 +10,7 @@ import com.android.volley.toolbox.Volley;
 
 public class AppController extends Application {
 
-    private static final String TAG = "MapActivity";
+    private static final String TAG = "AppController";
     private RequestQueue mRequestQueue;
     private static AppController mInstance;
 

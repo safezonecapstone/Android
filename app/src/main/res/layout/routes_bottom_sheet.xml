@@ -23,7 +23,7 @@
         android:id="@+id/routes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".RouteMap"
+        tools:context=".RouteActivity"
         android:focusable="true"
         android:descendantFocusability="blocksDescendants"
         android:divider="#000"
