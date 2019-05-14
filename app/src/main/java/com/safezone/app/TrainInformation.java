@@ -10,19 +10,14 @@ import java.util.Vector;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class TrainInformation
-{
+public class TrainInformation {
+    //Private Variables
     private String street, risk, percentile;
     private ArrayList<String> train_stop= new ArrayList<>();
     private double longitude;
     private double latitude;
-//    public TrainInformation ()
-//    {
-//
-//    }
 
-    public TrainInformation(String Street_name, String Train_Risk, String Percentile, double latitude, double Longitude)
-    {
+    public TrainInformation(String Street_name, String Train_Risk, String Percentile, double latitude, double Longitude) {
         this.street = Street_name;
         this.risk = Train_Risk;
         this.percentile = Percentile;
@@ -30,9 +25,28 @@ public class TrainInformation
         this.longitude=Longitude;
     }
 
+    //Getter functions to get variables
     public String getName()
     {
         return street;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getPercentile()
+    {
+        return percentile;
+    }
+
+    public ArrayList<String> getTrainStop()
+    {
+        return train_stop;
     }
 
     public void setName(String Name)
@@ -40,10 +54,6 @@ public class TrainInformation
         this.street = Name;
     }
 
-    public ArrayList<String> getTrainStop()
-    {
-        return train_stop;
-    }
 
     public void addTrainStop(String TrainStop)
     {
@@ -60,21 +70,10 @@ public class TrainInformation
         this.risk = Risk;
     }
 
-    public String getPercentile()
-    {
-        return percentile;
-    }
-
     public void setPercentile(String Percentile)
     {
         this.percentile = Percentile;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
 
-    public double getLongitude() {
-        return longitude;
-    }
 }

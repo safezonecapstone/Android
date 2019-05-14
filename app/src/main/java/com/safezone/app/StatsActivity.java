@@ -171,6 +171,7 @@ public class StatsActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
+    //Rosa
     private void populateCrimeListView() {
 
         TextView textView=(TextView) findViewById(R.id.Address);
@@ -180,9 +181,11 @@ public class StatsActivity extends AppCompatActivity {
         SortableTableView<CrimeStationInformation> crimeStationInformationSortableTableView=
                 (SortableTableView<CrimeStationInformation>)findViewById(R.id.tableView);
         StatsTableAdapter statsTableAdapter=new StatsTableAdapter(this, cat);
+
         TableColumnWeightModel columnModel = new TableColumnWeightModel(2);
         columnModel.setColumnWeight(0, 2);
         columnModel.setColumnWeight(1, 1);
+
         crimeStationInformationSortableTableView.setColumnModel(columnModel);
         crimeStationInformationSortableTableView.setDataAdapter(statsTableAdapter);
         crimeStationInformationSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
@@ -193,17 +196,17 @@ public class StatsActivity extends AppCompatActivity {
             public void onDataClicked(int rowIndex, CrimeStationInformation clickedData) {
                 Intent myintent = new Intent(StatsActivity.this, CrimeDescriptionActivity.class);
 
+                //Pass crime description to the crime description activity
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Crime Description",(Serializable) cat.get(rowIndex).getC_description());
                 myintent.putExtra("BUNDLE", bundle);
                 startActivity(myintent);
-
             }
         });
     }
 
+    //comparator to sort by frequency
     private static class FreuencyComparator implements Comparator<CrimeStationInformation> {
-
         @Override
         public int compare(CrimeStationInformation o1, CrimeStationInformation o2) {
             return ((Integer)o1.getFrequency()).compareTo(o2.getFrequency());

@@ -9,7 +9,6 @@ public class Routes {
     private String rating;
     private String duration;
     private ArrayList<Object> instructions=new ArrayList<>();
-    //private ArrayList<String> subways=new ArrayList<>();
 
     Routes(String start, String end, String rate, String time){
         startingAddress=start;
@@ -18,6 +17,7 @@ public class Routes {
         duration=time;
     }
 
+    //Getter functions
     public String getDuration() {
         return duration;
     }
@@ -34,12 +34,15 @@ public class Routes {
         return startingAddress;
     }
 
+    public ArrayList<Object> getInstructions() {
+        return instructions;
+    }
+
+    //Mutator functions
     public void addInstructions(Object instruct){
        instructions.add(instruct);
     }
 
-    public ArrayList<Object> getInstructions() {
-        return instructions;
-    }
+
 
 }

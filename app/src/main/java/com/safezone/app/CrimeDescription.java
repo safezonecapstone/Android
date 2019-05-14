@@ -3,21 +3,19 @@ package com.safezone.app;
 import java.io.Serializable;
 
 public class CrimeDescription implements Serializable {
-    String description_;
-    String date_;
+    //Private Variables
+    private String description_;
+    private String date_;
 
-    public CrimeDescription (String Description, String Date) {
-
+    //Constructor
+    CrimeDescription (String Description, String Date) {
         description_ = Description;
         date_ = Date;
     }
 
+    //Getter functions to retrieve private variables
     public String getDate_() {
         return date_;
-    }
-
-    public void setDate_(String date_) {
-        this.date_ = date_;
     }
 
     public String getDescription_() {
