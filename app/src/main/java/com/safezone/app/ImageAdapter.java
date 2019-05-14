@@ -34,11 +34,13 @@ public class ImageAdapter extends BaseAdapter {
         train_images=images;
     }
 
+    //get size of array
     @Override
     public int getCount() {
         return train_images.size();
     }
 
+    //get item in array
     @Override
     public Object getItem(int position) {
         return train_images.get(position);
@@ -51,18 +53,10 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // create a new ImageView for each item referenced by the Adapter
-        ImageView imageView =  new ImageView(mContext);
-        imageView.setImageResource(train_images.get(position));
-
-
-
-//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.MATCH_PARENTS, 30);
+        // create a ImageView for each item
+        ImageView imageView =  new ImageView(mContext); //Creates a new image view
+        imageView.setImageResource(train_images.get(position)); //set the image to the specific train image
         imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        imageView.getLayoutParams().height = 150;
-//        imageView.getLayoutParams().width = 150;
-//
-//        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
         imageView.setFocusable(false);
         imageView.setClickable(false);

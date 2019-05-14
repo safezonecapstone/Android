@@ -31,7 +31,7 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         populateView();
     }
 
-    //Retreive crime description passed by the previous activity
+    //Retrieve crime description passed by the previous activity
     public void getCrimeDescription()
     {
         Log.d(TAG, "Entering");
@@ -42,17 +42,13 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
             Bundle bundle=intent.getBundleExtra("BUNDLE");
             crimeDescriptions = (ArrayList<CrimeDescription>) bundle.getSerializable("Crime Description"); //Gets the crime description
         }
-
-        for(int i=0; i<crimeDescriptions.size(); i++)
-        {
-            Log.d(TAG, crimeDescriptions.get(i).getDate_());
-        }
     }
 
+    //Rosa
     //Populate the view with crime description and date using costume adapter
     public void populateView()
     {
-        final String[] TableHeader={"Description", "Date"};
+        final String[] TableHeader={"Description", "Date"}; //Header
         SortableTableView<CrimeDescription> crimeDescriptionSortableTableView=
                 (SortableTableView<CrimeDescription>)findViewById(R.id.tableViewCrimeDescription);
         CrimeDescriptionTableAdapter crimeDescriptionTableAdapter=new CrimeDescriptionTableAdapter(this, crimeDescriptions);
@@ -61,11 +57,12 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         columnModel.setColumnWeight(1, 1);
         crimeDescriptionSortableTableView.setColumnModel(columnModel);
         crimeDescriptionSortableTableView.setDataAdapter(crimeDescriptionTableAdapter);
-        crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
+        crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader)); //Set header to table
 
-        crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator());
+        crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator()); //set the Date comparator
     }
 
+    //Comparator to sort by date
     private static class DateComparator implements Comparator<CrimeDescription> {
         @Override
         public int compare(CrimeDescription o1, CrimeDescription o2) {

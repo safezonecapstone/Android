@@ -267,10 +267,10 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         LatLngBounds bounds = builder.build();
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
 
-        MarkerOptions current = new MarkerOptions().position(current_loc).title("Current Location");
+        MarkerOptions current = new MarkerOptions().position(current_loc).title("Starting address");
         MarkerOptions destination = new MarkerOptions().position(destination_loc);
         mMap.addMarker(current).showInfoWindow();
-        mMap.addMarker(destination);
+        mMap.addMarker(destination);// Shows destination marker
     }
 
     //Map initialization
@@ -320,8 +320,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     //Alex Bortoc + Yi Tong
     //Called from init function with the argument values set either by geolocating or by getAddress(origin)
     //and geolocating(destination).Retrieves routes information by making an API call to the API server via URL
-    private void getRoutes (double origin_latitude, double origin_longitude,
-                            double dest_latitude, double dest_longitude) {
+    private void getRoutes (double origin_latitude, double origin_longitude, double dest_latitude, double dest_longitude) {
         String api_key = getString(R.string.safezone_api_key);
         final StringBuilder routes =
                 new StringBuilder("https://api-dot-united-triode-233023.appspot.com/api/route?");
@@ -340,67 +339,65 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray result) {
-
                         Log.d(TAG, "onResponse: Result= " + result.toString());
-                        //*****************This will need to be adjusted to the actual json ***************************
                         try {
                             routesData.clear();
                             for (int i = 0; i< result.length(); i++) {
                                 JSONObject jsonObject = (JSONObject) result.get(i); //Get each object in JSON array
-                                String rating = jsonObject.getString("rating"); //get train station name
+                                String rating = jsonObject.getString("rating"); //get route rating
                                 Log.d(TAG, "Rating: " + rating);
-//
+
                                 String leg = jsonObject.getString("leg");
                                 JSONObject LEG=(JSONObject) jsonObject.getJSONObject("leg");
                                 Log.d(TAG, "Leg: " + leg);
 
-                                String startingPoint=LEG.getString("start_address");
+                                String startingPoint=LEG.getString("start_address"); //Get starting address for route
                                 Log.d(TAG, "Start Address: " + startingPoint);
 
-                                String endingPoint=LEG.getString("end_address");
+                                String endingPoint=LEG.getString("end_address"); //Get ending address for route
                                 Log.d(TAG, "End Address: " + endingPoint);
 
-                                JSONObject duration=LEG.getJSONObject("duration");
+                                JSONObject duration=LEG.getJSONObject("duration"); //Get duration of the route
                                 String durationTime=duration.getString("text");
                                 Log.d(TAG, "Duration: " + durationTime);
 
                                 Routes routes=new Routes(startingPoint, endingPoint, rating ,durationTime);
-                                routesData.add(routes);
 
-                                JSONArray steps=LEG.getJSONArray("steps");
+                                JSONArray steps=LEG.getJSONArray("steps"); //Get the instructions for this route
                                 Log.d(TAG, steps.toString());
                                 for(int j=0; j<steps.length(); j++){
                                     JSONObject eachSteps = (JSONObject) steps.get(j);
 
-                                    if(eachSteps.getString("travel_mode").equals("WALKING")) {
-                                        String instructions=eachSteps.getString("html_instructions");
+                                    if(eachSteps.getString("travel_mode").equals("WALKING")) { //If travel is walking
+                                        String instructions=eachSteps.getString("html_instructions"); //Get the instruction
                                         Instructions instructions1=new Instructions("WALKING", instructions);
-                                        routesData.get(i).addInstructions(instructions1);
+                                        routes.addInstructions(instructions1);
                                     }
-                                    else if(eachSteps.getString("travel_mode").equals("TRANSIT")) {
+                                    else if(eachSteps.getString("travel_mode").equals("TRANSIT")) { //If travel is transit
                                         JSONObject transit=eachSteps.getJSONObject("transit_details");
-                                        String instructions=eachSteps.getString("html_instructions");
+                                        String instructions=eachSteps.getString("html_instructions"); //Get instruction
                                         JSONObject subwayLine=transit.getJSONObject("line");
-                                        JSONObject arrivalStop=transit.getJSONObject("arrival_stop");
+                                        JSONObject arrivalStop=transit.getJSONObject("arrival_stop"); //Get the name of place to stop at
                                         String stopName=arrivalStop.getString("name");
-                                        JSONArray agency=subwayLine.getJSONArray("agencies"); //Get agencies
+                                        JSONArray agency=subwayLine.getJSONArray("agencies"); //Get transit agencies
                                         String lineName="";
                                         for(int size=0; size<agency.length(); size++){
                                             JSONObject anAgency=(JSONObject)agency.get(size);
                                             Log.d(TAG, anAgency.getString("name"));
-                                            if(anAgency.getString("name").equals("Long Island Rail Road")){
+                                            if(anAgency.getString("name").equals("Long Island Rail Road")){ //If agency is the LIRR
                                                 lineName="LIRR";
                                             }
-                                            else if(anAgency.getString("name").equals("MTA New York City Transit")){
-                                                lineName=subwayLine.getString("short_name");
+                                            else if(anAgency.getString("name").equals("MTA New York City Transit")){ //If agency is MTA
+                                                lineName=subwayLine.getString("short_name"); //Get the train we take, i.e A or F or 6 etc...
                                             }
                                         }
-                                        Instructions instructions1=new Instructions("TRANSIT", instructions);
+                                        Instructions instructions1=new Instructions("TRANSIT", instructions); //create that instruction
                                         instructions1.setSubway(lineName);
                                         instructions1.setDestinationStop(stopName);
-                                        routesData.get(i).addInstructions(instructions1);
+                                        routes.addInstructions(instructions1);
                                     }
                                 }
+                                routesData.add(routes);
                             }
                             populateListView();
                             Log.d(TAG, "jsonData: happened" + routesData);

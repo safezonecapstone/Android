@@ -29,10 +29,8 @@ public class InstructionsActivity extends AppCompatActivity {
         Log.d(TAG, "Entering");
         Intent intent = getIntent();
         if(intent.hasExtra("BUNDLE")) {
-
-            Log.d(TAG, "Entering 2");
             Bundle bundle=intent.getBundleExtra("BUNDLE");
-            instruction = (ArrayList<Instructions>) bundle.getSerializable("Instruction"); //Gets the crime description
+            instruction = (ArrayList<Instructions>) bundle.getSerializable("Instruction"); //Gets the instructions for the route
         }
         if(intent.hasExtra("Source")){
             startingAddress=intent.getStringExtra("Source");
@@ -42,11 +40,18 @@ public class InstructionsActivity extends AppCompatActivity {
         }
     }
 
+    //Display the view
     private void populateView(){
+
+        //Set starting address
         TextView from=(TextView)findViewById(R.id.source);
         from.setText(startingAddress);
+
+        //Set destination address
         TextView to=(TextView)findViewById(R.id.destination);
         to.setText(endingAddress);
+
+        //Display the list of steps to get from starting address to destination
         ListView listView=(ListView)findViewById(R.id.listInstruction);
         InstructionsAdapter instructionsAdapter=new InstructionsAdapter(this, instruction);
         listView.setAdapter(instructionsAdapter);

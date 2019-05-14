@@ -47,14 +47,13 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         String location_name=location.getName();
         place.setText(location_name);
 
-        //TextView trains = convertView.findViewById(R.id.trains);
-
         StringBuilder builder = new StringBuilder();
 
         ArrayList<String> trainstops=location.getTrainStop();
 
         ArrayList<Integer> images=new ArrayList<>();
 
+        //Adds all the trains to the images array
         for(int i=0; i<location.getTrainStop().size(); i++) {
             Log.d(TAG, trainstops.get(i));
             if(trainstops.get(i).equals("A")){
@@ -131,6 +130,7 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
             }
         }
 
+        //Displays all the train stop images in a gridview
         GridView layout = (GridView) convertView.findViewById(R.id.grid_view);
         layout.setFocusable(false);
         layout.setClickable(false);

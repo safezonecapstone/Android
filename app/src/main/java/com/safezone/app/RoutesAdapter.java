@@ -32,41 +32,25 @@ public class RoutesAdapter extends ArrayAdapter<Routes> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.routes_layout, parent, false);
         }
 
+        //Get route
         Routes route = getItem(position);
 
         TextView routepostion=(TextView)convertView.findViewById(R.id.routeNumber);
         routepostion.setText(""+ (position+1) + ".");
 
-//        TextView startAddress = (TextView) convertView.findViewById(R.id.startingAddress);
-//        String start = route.getStartingAddress();
-//        Log.d(TAG, start);
-//        startAddress.setText(start);
-//
-//        TextView endingAddress = (TextView) convertView.findViewById(R.id.endingAddress);
-//        String end = route.getEndingAddress();
-//        endingAddress.setText(end);
-
-//        Log.d(TAG, end);
-
+        //Get the duration of the route
         TextView duration = (TextView) convertView.findViewById(R.id.duration);
         String durationTime = getContext().getString(R.string.duration, route.getDuration());
         duration.setText(durationTime);
 
         Log.d(TAG, durationTime);
 
+        //Displays the safety rating of the route
         TextView rating = (TextView) convertView.findViewById(R.id.rating);
         String rate=getContext().getString(R.string.percentile, route.getRating());
         rating.setText(rate);
 
         Log.d(TAG, rate);
-//        LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.instructions);
-//        ListView listView=(ListView)convertView.findViewById(R.id.instructions);
-//        ArrayList<Instructions> instructions = route.getInstructions();
-//        for(int i=0; i<instructions.size(); i++){
-//            Log.d(TAG, instructions.get(i).getInstruction());
-//        }
-//        InstructionsAdapter instructionsAdapter=new InstructionsAdapter(getContext(), instructions);
-//        listView.setAdapter(instructionsAdapter);
 
         return convertView;
     }
