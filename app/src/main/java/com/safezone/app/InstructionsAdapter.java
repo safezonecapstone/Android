@@ -33,6 +33,8 @@ public class InstructionsAdapter extends ArrayAdapter<Instructions> {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.steps_layout, parent, false);
             }
+            TextView stepNumber=(TextView) convertView.findViewById(R.id.stepNumber);
+            stepNumber.setText((position+1)+".");
             TextView textView = (TextView) convertView.findViewById(R.id.stepsTEXT);
             textView.setText(instructions.getInstruction());
         }
@@ -40,10 +42,23 @@ public class InstructionsAdapter extends ArrayAdapter<Instructions> {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.subway_instruction_layout, parent, false);
             }
+            TextView stepNumber=(TextView) convertView.findViewById(R.id.stepNumber); //Set the step number
+            stepNumber.setText((position+1) + ".");
+
+//            TextView subwayInstructions=(TextView)convertView.findViewById(R.id.subwayInstruction);
+//            subwayInstructions.setText(instructions.getInstruction());
+
             TextView subwayInstructions=(TextView)convertView.findViewById(R.id.subwayInstruction);
-            subwayInstructions.setText(instructions.getInstruction());
+            if(instructions.getSubway().equals("LIRR")){
+                subwayInstructions.setText("LIRR: " + instructions.getInstruction());
+            }
+            else{
+                subwayInstructions.setText(instructions.getInstruction());
+            }
             TextView textView=(TextView)convertView.findViewById(R.id.stopToGetOff);
             textView.setText(String.format(getContext().getString(R.string.destination_stop), instructions.getDestinationStop()));
+
+
             ImageView imageView = (ImageView) convertView.findViewById(R.id.train_logo);
             Log.d(TAG, instructions.getInstruction());
             if (instructions.getSubway().equals("A")) {

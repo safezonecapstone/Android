@@ -374,30 +374,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
                                     if(eachSteps.getString("travel_mode").equals("WALKING")) {
                                         String instructions=eachSteps.getString("html_instructions");
-//                                        JSONObject end_location=eachSteps.getJSONObject("end_location");
-//                                        JSONObject start_location=eachSteps.getJSONObject("start_location");
-//                                        Double startingLat=Double.parseDouble(start_location.getString("lat"));
-//                                        Double startingLong=Double.parseDouble(start_location.getString("lng"));
-//                                        Double endLat=Double.parseDouble(end_location.getString("lat"));
-//                                        Double endLong=Double.parseDouble(end_location.getString("lng"));
                                         Instructions instructions1=new Instructions("WALKING", instructions);
                                         routesData.get(i).addInstructions(instructions1);
-//                                        JSONArray stepsForWalking=eachSteps.getJSONArray("steps");
-//                                        for(int k=0; k<steps.length(); k++) {
-//                                            JSONObject walkingSteps = (JSONObject) steps.get(k);
-//
-//                                            if (eachSteps.getString("travel_mode").equals("WALKING")) {
-//                                                String instructions2 = walkingSteps.getString("html_instructions");
-//                                                JSONObject end_location1 = walkingSteps.getJSONObject("end_location");
-//                                                JSONObject start_location1 = walkingSteps.getJSONObject("start_location");
-//                                                Double startingLat1 = Double.parseDouble(start_location1.getString("lat"));
-//                                                Double startingLong1 = Double.parseDouble(start_location1.getString("lng"));
-//                                                Double endLat1 = Double.parseDouble(end_location1.getString("lat"));
-//                                                Double endLong1 = Double.parseDouble(end_location1.getString("lng"));
-//                                                Instructions instructions3 = new Instructions("WALKING", instructions2, startingLat1, startingLong1, endLat1, endLong1);
-//                                                routesData.get(i).addInstructions(instructions3);
-//                                            }
-//                                        }
                                     }
                                     else if(eachSteps.getString("travel_mode").equals("TRANSIT")) {
                                         JSONObject transit=eachSteps.getJSONObject("transit_details");
@@ -405,13 +383,18 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                         JSONObject subwayLine=transit.getJSONObject("line");
                                         JSONObject arrivalStop=transit.getJSONObject("arrival_stop");
                                         String stopName=arrivalStop.getString("name");
-                                        String lineName=subwayLine.getString("short_name");
-//                                        JSONObject end_location=eachSteps.getJSONObject("end_location");
-//                                        JSONObject start_location=eachSteps.getJSONObject("start_location");
-//                                        Double startingLat=Double.parseDouble(start_location.getString("lat"));
-//                                        Double startingLong=Double.parseDouble(start_location.getString("lng"));
-//                                        Double endLat=Double.parseDouble(end_location.getString("lat"));
-//                                        Double endLong=Double.parseDouble(end_location.getString("lng"));
+                                        JSONArray agency=subwayLine.getJSONArray("agencies"); //Get agencies
+                                        String lineName="";
+                                        for(int size=0; size<agency.length(); size++){
+                                            JSONObject anAgency=(JSONObject)agency.get(size);
+                                            Log.d(TAG, anAgency.getString("name"));
+                                            if(anAgency.getString("name").equals("Long Island Rail Road")){
+                                                lineName="LIRR";
+                                            }
+                                            else if(anAgency.getString("name").equals("MTA New York City Transit")){
+                                                lineName=subwayLine.getString("short_name");
+                                            }
+                                        }
                                         Instructions instructions1=new Instructions("TRANSIT", instructions);
                                         instructions1.setSubway(lineName);
                                         instructions1.setDestinationStop(stopName);
