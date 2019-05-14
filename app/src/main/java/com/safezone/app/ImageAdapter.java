@@ -52,10 +52,15 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // create a new ImageView for each item referenced by the Adapter
-        ImageView imageView =  new ImageView(mContext);
+        ImageView imageView;
+        if(convertView==null){
+            imageView =  new ImageView(mContext);
+        }
+        else{
+            imageView=(ImageView)convertView;
+        }
+
         imageView.setImageResource(train_images.get(position));
-
-
 
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.MATCH_PARENTS, 30);
         imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

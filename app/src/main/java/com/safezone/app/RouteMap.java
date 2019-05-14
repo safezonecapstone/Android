@@ -391,11 +391,22 @@ public class RouteMap extends AppCompatActivity implements OnMapReadyCallback {
                                     }
                                     else if(eachSteps.getString("travel_mode").equals("TRANSIT")) {
                                         JSONObject transit=eachSteps.getJSONObject("transit_details");
-                                        String instructions=eachSteps.getString("html_instructions");
+                                        String instructions=eachSteps.getString("html_instructions"); //get instruction
                                         JSONObject subwayLine=transit.getJSONObject("line");
                                         JSONObject arrivalStop=transit.getJSONObject("arrival_stop");
                                         String stopName=arrivalStop.getString("name");
-                                        String lineName=subwayLine.getString("short_name");
+                                        JSONArray agency=subwayLine.getJSONArray("agencies"); //Get agencies
+                                        String lineName="";
+                                        for(int size=0; size<agency.length(); size++){
+                                            JSONObject anAgency=(JSONObject)agency.get(size);
+                                            Log.d(TAG, anAgency.getString("name"));
+                                            if(anAgency.getString("name").equals("Long Island Rail Road")){
+                                                lineName="LIRR";
+                                            }
+                                            else if(anAgency.getString("name").equals("MTA New York City Transit")){
+                                                lineName=subwayLine.getString("short_name");
+                                            }
+                                        }
 //                                        JSONObject end_location=eachSteps.getJSONObject("end_location");
 //                                        JSONObject start_location=eachSteps.getJSONObject("start_location");
 //                                        Double startingLat=Double.parseDouble(start_location.getString("lat"));

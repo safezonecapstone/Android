@@ -32,7 +32,7 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
     }
 
     //Retreive crime description passed by the previous activity
-    public void getCrimeDescription()
+    private void getCrimeDescription()
     {
         Log.d(TAG, "Entering");
         Intent intent = getIntent();
@@ -50,20 +50,21 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
     }
 
     //Populate the view with crime description and date using costume adapter
-    public void populateView()
+    private void populateView()
     {
-        final String[] TableHeader={"Description", "Date"};
+        final String[] TableHeader={"Description", "Date"}; //Table headers
         SortableTableView<CrimeDescription> crimeDescriptionSortableTableView=
                 (SortableTableView<CrimeDescription>)findViewById(R.id.tableViewCrimeDescription);
         CrimeDescriptionTableAdapter crimeDescriptionTableAdapter=new CrimeDescriptionTableAdapter(this, crimeDescriptions);
+        //Set columns for table
         TableColumnWeightModel columnModel = new TableColumnWeightModel(2);
         columnModel.setColumnWeight(0, 3);
         columnModel.setColumnWeight(1, 1);
         crimeDescriptionSortableTableView.setColumnModel(columnModel);
-        crimeDescriptionSortableTableView.setDataAdapter(crimeDescriptionTableAdapter);
-        crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader));
+        crimeDescriptionSortableTableView.setDataAdapter(crimeDescriptionTableAdapter); //Set table data
+        crimeDescriptionSortableTableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, TableHeader)); //Set the table header
 
-        crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator());
+        crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator()); //Allows us to sort table by date
     }
 
     private static class DateComparator implements Comparator<CrimeDescription> {

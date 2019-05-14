@@ -3,10 +3,10 @@ package com.safezone.app;
 import java.io.Serializable;
 
 public class CrimeDescription implements Serializable {
-    String description_;
-    String date_;
+    private String description_;
+    private String date_;
 
-    public CrimeDescription (String Description, String Date) {
+    CrimeDescription (String Description, String Date) {
 
         description_ = Description;
         date_ = Date;

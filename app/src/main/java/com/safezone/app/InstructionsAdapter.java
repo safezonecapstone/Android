@@ -33,6 +33,8 @@ public class InstructionsAdapter extends ArrayAdapter<Instructions> {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.steps_layout, parent, false);
             }
+            TextView stepNumber=(TextView) convertView.findViewById(R.id.stepNumber);
+            stepNumber.setText((position+1)+".");
             TextView textView = (TextView) convertView.findViewById(R.id.stepsTEXT);
             textView.setText(instructions.getInstruction());
         }
@@ -40,12 +42,22 @@ public class InstructionsAdapter extends ArrayAdapter<Instructions> {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.subway_instruction_layout, parent, false);
             }
+            TextView stepNumber=(TextView) convertView.findViewById(R.id.stepNumber); //Set the step number
+            stepNumber.setText((position+1) + ".");
+
             TextView subwayInstructions=(TextView)convertView.findViewById(R.id.subwayInstruction);
-            subwayInstructions.setText(instructions.getInstruction());
+            if(instructions.getSubway().equals("LIRR")){
+                subwayInstructions.setText("LIRR: " + instructions.getInstruction());
+            }
+            else{
+                subwayInstructions.setText(instructions.getInstruction());
+            }
+
             TextView textView=(TextView)convertView.findViewById(R.id.stopToGetOff);
             textView.setText(String.format(getContext().getString(R.string.destination_stop), instructions.getDestinationStop()));
             ImageView imageView = (ImageView) convertView.findViewById(R.id.train_logo);
             Log.d(TAG, instructions.getInstruction());
+
             if (instructions.getSubway().equals("A")) {
                 imageView.setImageResource(R.drawable.ic_nycs_bull_trans_a);
             } else if (instructions.getSubway().equals("B")) {
@@ -96,77 +108,6 @@ public class InstructionsAdapter extends ArrayAdapter<Instructions> {
                 imageView.setImageResource(R.drawable.ic_nycs_bull_trans_7);
             }
         }
-//        else if(instructions.getTransit_Mode().equals("WALKING")) {
-//            if (convertView == null) {
-//                convertView = LayoutInflater.from(getContext()).inflate(R.layout.steps_layout, parent, false);
-//            }
-//            TextView textView =(TextView)convertView.findViewById(R.id.stepsTEXT);
-//            textView.setText(instructions.getInstruction());
-        //}
-
-
-        //RelativeLayout linearLayout=(RelativeLayout) convertView.findViewById(R.id.steps);
-//        if (instructions.getTransit_Mode().equals("WALKING")) {
-//            TextView textView = new TextView(acitivity);
-//            textView.setText(instructions.getInstruction());
-//            //linearLayout.addView(textView);
-//        }
-//        else if (instructions.getTransit_Mode().equals("TRANSIT")) {
-//            ImageView imageView = (ImageView) convertView.findViewById(R.id.train_image);
-//            Log.d(TAG, instructions.getInstruction());
-//            if (instructions.getInstruction().equals("A")) {
-//                imageView.setImageResource(R.drawable.ic_nycs_bull_trans_a);
-//            } else if (instructions.getInstruction().equals("B")) {
-//                imageView.setImageResource(R.drawable.ic_nycs_bull_trans_b);
-//            } else if (instructions.getInstruction().equals("C")) {
-//                imageView.setImageResource(R.drawable.ic_nycs_bull_trans_c);
-//            } else if (instructions.getInstruction().equals("D")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_d);
-//                } else if (instructions.getInstruction().equals("E")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_e);
-//                } else if (instructions.getInstruction().equals("F")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_f);
-//                } else if (instructions.getInstruction().equals("G")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_g);
-//                } else if (instructions.getInstruction().equals("J")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_j);
-//                } else if (instructions.getInstruction().equals("L")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_l);
-//                } else if (instructions.getInstruction().equals("M")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_m);
-//                } else if (instructions.getInstruction().equals("N")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_n);
-//                } else if (instructions.getInstruction().equals("Q")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_q);
-//                } else if (instructions.getInstruction().equals("R")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_r);
-//                } else if (instructions.getInstruction().equals("S")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_s);
-//                } else if (instructions.getInstruction().equals("W")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_w);
-//                } else if (instructions.getInstruction().equals("Z")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_z);
-//                } else if (instructions.getInstruction().equals("1")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_1);
-//                } else if (instructions.getInstruction().equals("2")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_2);
-//                } else if (instructions.getInstruction().equals("3")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_3);
-//                } else if (instructions.getInstruction().equals("4")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_4);
-//                } else if (instructions.getInstruction().equals("5")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_5);
-//                } else if (instructions.getInstruction().equals("6")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_6);
-//                } else if( instructions.getInstruction().equals("6X")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_6d);
-//                } else if (instructions.getInstruction().equals("7")) {
-//                    imageView.setImageResource(R.drawable.ic_nycs_bull_trans_7);
-//                }
-//                //linearLayout.addView(imageView);
-//            }
         return convertView;
     }
-
-
 }

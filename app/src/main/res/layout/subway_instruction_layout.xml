@@ -4,12 +4,20 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/stepNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
         android:id="@+id/subwayInstruction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"/>
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toEndOf="@id/stepNumber"/>
     <ImageView
         android:id="@+id/train_logo"
         android:layout_width="wrap_content"
@@ -21,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/subwayInstruction"
         android:textSize="16sp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="15dp"
         android:layout_marginEnd="5dp"/>
 
 </RelativeLayout>
