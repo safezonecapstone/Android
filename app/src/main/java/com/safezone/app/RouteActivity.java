@@ -245,7 +245,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                         }
                         else {
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(RouteActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -310,7 +310,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                         else {
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            moveCamera(new LatLng(mCurrentLatitude, mCurrentLongitude), DEFAULT_ZOOM, "My Location");
                         }
                     }
                 });

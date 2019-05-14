@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         mRoutesButtonHelp = (TextView) findViewById(R.id.textview_help_button_routes);
         mTradeMark = (TextView) findViewById(R.id.trade_mark);
 
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showLocationBar();
@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            super.recreate(); //without this activity refresh, the app needs to be relaunched for it start working
         }
 
         if(isServicesOK()) {
@@ -203,11 +204,12 @@ public class MainActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
-                        finish();
-                        startActivity(getIntent());
+
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
+                        Toast.makeText(MainActivity.this, "Sorry, but the " +
+                                "application requires location services",Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -274,7 +276,8 @@ public class MainActivity extends AppCompatActivity {
                                 startNearbySearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             }
                             else {
-                                Log.d(TAG, "getCurrentLocation: can't get a location");
+                                Log.d(TAG, "getCurrentLocation: can't get a location from fused");
+                                startNearbySearch(mLat, mLng);
                             }
                         }
                     });
@@ -296,7 +299,8 @@ public class MainActivity extends AppCompatActivity {
                                 startRoutesSearch(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             }
                             else {
-                                Log.d(TAG, "getCurrentLocation: can't get a location");
+                                Log.d(TAG, "getCurrentLocation: can't get a location from fused");
+                                startRoutesSearch(mLat, mLng);
                             }
                         }
                     });
