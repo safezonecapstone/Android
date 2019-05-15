@@ -121,14 +121,40 @@ public class MainActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, mLocationListener);
             mLocationPermissionGranted = true;
+            if(isServicesOK()) {
+                init();
+            }
         }
         else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            super.recreate(); //without this activity refresh, the app needs to be relaunched for it start working
         }
+    }
 
-        if(isServicesOK()) {
-            init();
+    //Called from onCreate. On fresh install, when permissions have not been granted yet, this function
+    //will track whether or not the user agreed to grant them. If the user declines, buttons will not
+    //function, otherwise the app will be initialized and become functional.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions,
+                                           @androidx.annotation.NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called");
+
+        switch(requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if(grantResults.length > 0) {
+                    for(int i = 0; i < grantResults.length; i++) {
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                            return;
+                        }
+                    }
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                    mLocationPermissionGranted = true;
+                    //run init function
+                    if(isServicesOK()) {
+                        init();
+                    }
+                }
+            }
         }
     }
 
@@ -204,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
-
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
