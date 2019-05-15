@@ -124,11 +124,28 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            super.recreate(); //without this activity refresh, the app needs to be relaunched for it start working
+            //super.recreate(); //without this activity refresh, the app needs to be relaunched for it start working
         }
 
         if(isServicesOK()) {
             init();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called");
+        if(requestCode==LOCATION_PERMISSION_REQUEST_CODE){
+            if(grantResults.length > 0) {
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                        return;
+                    }
+                }
+                Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                mLocationPermissionGranted = true;
+            }
         }
     }
 
