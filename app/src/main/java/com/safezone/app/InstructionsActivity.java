@@ -1,3 +1,4 @@
+//******Yi Tong*****//
 package com.safezone.app;
 
 import android.content.Intent;

@@ -15,6 +15,7 @@ public class CrimeDescriptionTableAdapter extends TableDataAdapter<CrimeDescript
         super(context, detailed_data);
     }
 
+    //Rosa
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         CrimeDescription detailedCrimeDescription = getRowData(rowIndex);

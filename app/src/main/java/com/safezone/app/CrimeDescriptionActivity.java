@@ -31,6 +31,7 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         populateView();
     }
 
+    //Rosa
     //Retrieve crime description passed by the previous activity
     public void getCrimeDescription()
     {
@@ -62,6 +63,7 @@ public class CrimeDescriptionActivity extends AppCompatActivity {
         crimeDescriptionSortableTableView.setColumnComparator(1, new DateComparator()); //set the Date comparator
     }
 
+    //Rosa
     //Comparator to sort by date
     private static class DateComparator implements Comparator<CrimeDescription> {
         @Override

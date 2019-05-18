@@ -34,6 +34,7 @@ public class TrainInformationAdapter extends ArrayAdapter<TrainInformation> {
         acitivity=context;
     }
 
+    //Yi Tong
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {

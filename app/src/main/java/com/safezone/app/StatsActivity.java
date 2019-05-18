@@ -1,3 +1,4 @@
+//**********Rosa*********//
 package com.safezone.app;
 
 import android.content.Context;
@@ -171,7 +172,7 @@ public class StatsActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
-    //Rosa
+
     private void populateCrimeListView() {
 
         TextView textView=(TextView) findViewById(R.id.Address);
